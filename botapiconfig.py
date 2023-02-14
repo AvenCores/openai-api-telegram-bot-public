@@ -1,0 +1,2 @@
+telegrambotapi = ""
+openaiapi = ""
