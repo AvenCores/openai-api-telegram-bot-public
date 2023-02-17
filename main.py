@@ -59,6 +59,7 @@ def mainstarter():
             bot.send_message(message.chat.id, "https://github.com/AvenCores/chatgpt-telegram-bot-public")
 
         else:
+            msg = bot.send_message(message.chat.id, "📄Идет загрузка, подождите...")
             response = openai.Completion.create(
                 model="text-davinci-003",
                 prompt=message.text,
@@ -66,6 +67,7 @@ def mainstarter():
                 temperature=0,
                 top_p=0,
             )
+            bot.edit_message_text("✅Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
             bot.send_message(chat_id=message.from_user.id, text=response["choices"][0]["text"])
 
     bot.polling(none_stop=True)
