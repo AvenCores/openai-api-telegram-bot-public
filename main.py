@@ -63,7 +63,7 @@ def mainstarter():
             response = openai.Completion.create(
                 model="text-davinci-003",
                 prompt=message.text,
-                max_tokens=500,
+                max_tokens=2000,
                 temperature=0,
                 top_p=0,
             )
