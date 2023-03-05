@@ -6,7 +6,7 @@
 ![example](https://i.imgur.com/7HLfGws.png)
 
 # 🖤Пример работы
-![example](https://i.imgur.com/IccdhmA.png)
+![example](https://i.imgur.com/XDmuoa8.png)
 
 # 💰Поддержать проект:
 
