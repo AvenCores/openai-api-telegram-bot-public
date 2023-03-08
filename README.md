@@ -3,7 +3,7 @@
 Бесплатная реализация ChatGPT в Telegram на базе telebot + openai.
 
 # 👾Меню
-![example](https://i.imgur.com/7HLfGws.png)
+![example](https://user-images.githubusercontent.com/64781822/223844484-888afc0b-db36-419c-9467-8b0a4054819e.png)
 
 # 🖤Пример работы
 ![example](https://i.imgur.com/XDmuoa8.png)
