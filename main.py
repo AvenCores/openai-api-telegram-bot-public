@@ -102,15 +102,21 @@ def mainstarter():
 
         else:
             msg = bot.send_message(message.chat.id, "📄Идет загрузка, подождите...")
-            response = openai.Completion.create(
-                model="text-davinci-003",
-                prompt=message.text,
-                max_tokens=2000,
-                temperature=0,
-                top_p=0,
-            )
+            # response = openai.Completion.create(
+            #     model="text-davinci-003",
+            #     prompt=message.text,
+            #     max_tokens=2000,
+            #     temperature=0,
+            #     top_p=0,
+            # )
+
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": message.text}],
+                )
+
             bot.edit_message_text("✅Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
-            bot.send_message(chat_id=message.from_user.id, text=response["choices"][0]["text"])
+            bot.send_message(chat_id=message.from_user.id, text=response["choices"][0]["message"]["content"])
 
     bot.polling(none_stop=True)
 
