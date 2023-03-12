@@ -25,8 +25,38 @@ def mainstarter():
         markup.add(button1, button2, button3, button4, button5)
         sticker = open("sticker.webp", "rb")
         bot.send_sticker(message.chat.id, sticker)
-        markdown = """Привет друг! 👋\nДанный телеграм бот основан на технологии ChatGPT. 💻\nОтвет придется ждать довольно долго. ⏳\n\n*Что такое ChatGPT?* ❓\nChatGPT - это модель языкового обработки, разработанная OpenAI. Она была обучена на множестве текстов и может генерировать тексты, отвечать на вопросы и выполнять другие задачи обработки языка. 💡\n\n*Как задать вопрос ChatGPT?* ❓\nЛегко! Просто напиши свой вопрос и ожидай ответа. 😉"""
+        markdown = """Привет друг! 👋\nДанный телеграм бот основан на технологии ChatGPT и DALLE-2. 💻\nОтвет придется ждать довольно долго. ⏳\n\n*Что такое ChatGPT?* ❓\nChatGPT - это модель языкового обработки, разработанная OpenAI. Она была обучена на множестве текстов и может генерировать тексты, отвечать на вопросы и выполнять другие задачи обработки языка. 💡\n\n*Что такое DALLE-2?* ❓\nDALLE-2 - это продвинутая модель глубокого обучения, созданная OpenAI, которая может генерировать изображения и текстовые описания на основе заданного текстового ввода.\n\n*Как задать вопрос ChatGPT?* ❓\nЛегко! Просто напиши /chatgpt ВАШ-ЗАПРОС 😉\n\n*Как получить картинку от DALLE-2?* ❓\nЛегко! Просто напиши /dalle2 ВАШ-ЗАПРОС 😉"""
         bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['dalle2'])
+    def dalletwo(message):
+        msg = bot.send_message(message.chat.id, "📄Идет загрузка, подождите...")
+
+        command = message.text.split(maxsplit=1)[1]
+        response = openai.Image.create(
+            prompt=command,
+            n=1,
+            size="1024x1024"
+        )
+
+        markdown = f"[Картинка от DALLE-2]({response['data'][0]['url']})"
+        bot.edit_message_text("✅Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
+        bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['chatgpt'])
+    def chatgpt(message):
+        command = message.text.split(maxsplit=1)[1]
+        msg = bot.send_message(message.chat.id, "📄Идет загрузка, подождите...")
+
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": command}],
+        )
+
+        bot.edit_message_text("✅Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
+        bot.send_message(chat_id=message.from_user.id, text=response["choices"][0]["message"]["content"])
+
+    bot.polling(none_stop=True)
 
     @bot.message_handler(content_types=['text'])
     def send_text(message):
@@ -86,10 +116,8 @@ def mainstarter():
 
         elif message.text.lower() == "исходный код":
             markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("GitHub Page",
-                                                 url="https://github.com/AvenCores/chatgpt-telegram-bot-public")
-            button2 = types.InlineKeyboardButton("Full GNU GPL V3",
-                                                 url="https://www.gnu.org/licenses/quick-guide-gplv3.ru.html")
+            button1 = types.InlineKeyboardButton("GitHub Page", url="https://github.com/AvenCores/chatgpt-telegram-bot-public")
+            button2 = types.InlineKeyboardButton("Full GNU GPL V3", url="https://www.gnu.org/licenses/quick-guide-gplv3.ru.html")
             markdown = """⚠️ *Предупреждение* ⚠️
 
 Данный телеграм бот распространяется под лицензией GNU GPL 3. Это означает, что вы имеете право свободно использовать, распространять и изменять исходный код этого бота, при условии, что все ваши изменения также будут распространяться под той же лицензией. 🆓
@@ -99,26 +127,6 @@ def mainstarter():
 Спасибо за понимание и уважение к правам авторов! 🙏"""
             markup.add(button1, button2)
             bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
-
-        else:
-            msg = bot.send_message(message.chat.id, "📄Идет загрузка, подождите...")
-            # response = openai.Completion.create(
-            #     model="text-davinci-003",
-            #     prompt=message.text,
-            #     max_tokens=2000,
-            #     temperature=0,
-            #     top_p=0,
-            # )
-
-            response = openai.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=[{"role": "user", "content": message.text}],
-                )
-
-            bot.edit_message_text("✅Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
-            bot.send_message(chat_id=message.from_user.id, text=response["choices"][0]["message"]["content"])
-
-    bot.polling(none_stop=True)
 
 
 while True:
