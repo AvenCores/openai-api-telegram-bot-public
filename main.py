@@ -56,8 +56,6 @@ def mainstarter():
         bot.edit_message_text("✅Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
         bot.send_message(chat_id=message.from_user.id, text=response["choices"][0]["message"]["content"])
 
-    bot.polling(none_stop=True)
-
     @bot.message_handler(content_types=['text'])
     def send_text(message):
         if message.text.lower() == "мои проекты":
@@ -128,6 +126,7 @@ def mainstarter():
             markup.add(button1, button2)
             bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
 
+    bot.polling(none_stop=True)
 
 while True:
     try:
