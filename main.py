@@ -30,31 +30,47 @@ def mainstarter():
 
     @bot.message_handler(commands=['dalle2'])
     def dalletwo(message):
-        msg = bot.send_message(message.chat.id, "📄Идет загрузка, подождите...")
+        if message.text.lower() == "/dalle2":
+            markdown = """🚫 *Ошибка*: Команда /dalle2 оказалась пустой, запрос не может быть выполнен.
 
-        command = message.text.split(maxsplit=1)[1]
-        response = openai.Image.create(
-            prompt=command,
-            n=1,
-            size="1024x1024"
-        )
+Пожалуйста, укажите текст после команды /dalle2, чтобы DALLE-2 мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
+            bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
+        elif message.text.split(maxsplit=1)[1]:
+            msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
 
-        markdown = f"[Картинка от DALLE-2]({response['data'][0]['url']})"
-        bot.edit_message_text("✅Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
-        bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
+            try:
+                response = openai.Image.create(
+                    prompt=message.text,
+                    n=1,
+                    size="1024x1024"
+                )
+
+                markdown = f"[Картинка от DALLE-2]({response['data'][0]['url']})"
+                bot.edit_message_text("✅ Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
+                bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
+            except openai.error.OpenAIError as e:
+                bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
 
     @bot.message_handler(commands=['chatgpt'])
     def chatgpt(message):
-        command = message.text.split(maxsplit=1)[1]
-        msg = bot.send_message(message.chat.id, "📄Идет загрузка, подождите...")
+        if message.text.lower() == "/chatgpt":
+            markdown = """🚫 *Ошибка*: Команда /chatgpt оказалась пустой, запрос не может быть выполнен.
 
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": command}],
-        )
+Пожалуйста, укажите текст после команды /chatgpt, чтобы ChatGPT мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
+            bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
+        elif message.text.split(maxsplit=1)[1]:
+            msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
 
-        bot.edit_message_text("✅Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
-        bot.send_message(chat_id=message.from_user.id, text=response["choices"][0]["message"]["content"])
+            try:
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=[{"role": "user", "content": message.text}],
+                )
+
+                bot.edit_message_text("✅ Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
+                bot.send_message(chat_id=message.from_user.id, text=response["choices"][0]["message"]["content"])
+            except openai.error.OpenAIError as e:
+                bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
 
     @bot.message_handler(content_types=['text'])
     def send_text(message):
@@ -137,6 +153,7 @@ def mainstarter():
             bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
 
     bot.polling(none_stop=True)
+
 
 while True:
     try:
