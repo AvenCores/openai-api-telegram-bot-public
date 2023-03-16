@@ -68,9 +68,6 @@ def mainstarter():
                     messages=[{"role": "user", "content": message.text}],
                 )
 
-                # bot.edit_message_text(f"✅ Ответ получен! ⬇️\n\n{output}", chat_id=message.chat.id, message_id=msg.message_id)
-                # bot.edit_message_text("✅ Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
-
                 output = response["choices"][0]["message"]["content"]
                 markdown=f"🤔 *Запрос:* {message.text.split(maxsplit=1)[1]}\n\n😊 *Ответ от ChatGPT:* {output}"
                 bot.delete_message(message.chat.id, msg.message_id)
