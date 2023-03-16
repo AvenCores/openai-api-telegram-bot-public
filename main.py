@@ -46,7 +46,8 @@ def mainstarter():
                 )
 
                 markdown = f"[Картинка от DALLE-2]({response['data'][0]['url']})"
-                bot.edit_message_text("✅ Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
+                bot.delete_message(message.chat.id, msg.message_id)
+                bot.send_message(chat_id=message.from_user.id, text="✅ Ответ получен!")
                 bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
             except openai.error.OpenAIError as e:
                 bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
@@ -67,8 +68,14 @@ def mainstarter():
                     messages=[{"role": "user", "content": message.text}],
                 )
 
-                bot.edit_message_text("✅ Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
-                bot.send_message(chat_id=message.from_user.id, text=response["choices"][0]["message"]["content"])
+                # bot.edit_message_text(f"✅ Ответ получен! ⬇️\n\n{output}", chat_id=message.chat.id, message_id=msg.message_id)
+                # bot.edit_message_text("✅ Ответ получен!", chat_id=message.chat.id, message_id=msg.message_id)
+
+                output = response["choices"][0]["message"]["content"]
+                markdown=f"🤔 *Запрос:* {message.text.split(maxsplit=1)[1]}\n\n😊 *Ответ от ChatGPT:* {output}"
+                bot.delete_message(message.chat.id, msg.message_id)
+                bot.send_message(chat_id=message.from_user.id, text="✅ Ответ получен!")
+                bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
             except openai.error.OpenAIError as e:
                 bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
 
