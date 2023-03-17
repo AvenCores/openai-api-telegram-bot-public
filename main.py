@@ -6,12 +6,15 @@ import telebot
 from telebot import types
 from datetime import datetime
 from sys import platform
+import time
 
 from botapiconfig import openaiapi, telegrambotapi
 
 openai.api_key = openaiapi
 bot = telebot.TeleBot(telegrambotapi)
 
+last_messages_chatgpt = {}
+last_messages_dalletwo = {}
 
 def mainstarter():
     @bot.message_handler(commands=['start'])
@@ -35,7 +38,13 @@ def mainstarter():
 
 Пожалуйста, укажите текст после команды /dalle2, чтобы DALLE-2 мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
             bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
-        elif message.text.split(maxsplit=1)[1]:
+        elif len(message.text.split(maxsplit=1)[1]) > 500:
+            markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 500 символов.*"
+            bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
+        elif message.chat.id in last_messages_dalletwo and time.time() - last_messages_dalletwo[message.chat.id] < 30:
+            markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
+            bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
+        else:
             msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
 
             try:
@@ -52,6 +61,8 @@ def mainstarter():
             except openai.error.OpenAIError as e:
                 bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
 
+            last_messages_dalletwo[message.chat.id] = time.time()
+
     @bot.message_handler(commands=['chatgpt'])
     def chatgpt(message):
         if message.text.lower() == "/chatgpt":
@@ -59,7 +70,13 @@ def mainstarter():
 
 Пожалуйста, укажите текст после команды /chatgpt, чтобы ChatGPT мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
             bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
-        elif message.text.split(maxsplit=1)[1]:
+        elif len(message.text.split(maxsplit=1)[1]) > 500:
+            markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 500 символов.*"
+            bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
+        elif message.chat.id in last_messages_chatgpt and time.time() - last_messages_chatgpt[message.chat.id] < 30:
+            markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
+            bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
+        else:
             msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
 
             try:
@@ -69,12 +86,17 @@ def mainstarter():
                 )
 
                 output = response["choices"][0]["message"]["content"]
-                markdown=f"🤔 *Запрос:* {message.text.split(maxsplit=1)[1]}\n\n😊 *Ответ от ChatGPT:* {output}"
-                bot.delete_message(message.chat.id, msg.message_id)
-                bot.send_message(chat_id=message.from_user.id, text="✅ Ответ получен!")
-                bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
+                max_len = 3000
+                parts = [output[i:i + max_len] for i in range(0, len(output), max_len)]
+                for part in parts:
+                    markdown = f"🤔 *Запрос:* {message.text.split(maxsplit=1)[1]}\n\n😊 *Ответ от ChatGPT:* {part}"
+                    bot.delete_message(message.chat.id, msg.message_id)
+                    bot.send_message(chat_id=message.from_user.id, text="✅ Ответ получен!")
+                    bot.send_message(chat_id=message.from_user.id, text=markdown, parse_mode="Markdown")
             except openai.error.OpenAIError as e:
                 bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
+
+            last_messages_chatgpt[message.chat.id] = time.time()
 
     @bot.message_handler(content_types=['text'])
     def send_text(message):
