@@ -16,9 +16,12 @@ bot = telebot.TeleBot(telegrambotapi)
 last_messages_chatgpt = {}
 last_messages_dalletwo = {}
 
+
 def mainstarter():
     @bot.message_handler(commands=['start'])
     def start_message(message):
+        if message.chat.type != 'private':
+            return
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         button1 = types.InlineKeyboardButton("Мои проекты")
         button2 = types.InlineKeyboardButton("Мои чаты")
@@ -46,6 +49,8 @@ def mainstarter():
             markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
             bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
         else:
+            last_messages_dalletwo[message.chat.id] = time.time()
+
             msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
 
             try:
@@ -55,21 +60,20 @@ def mainstarter():
                     size="1024x1024"
                 )
 
-                markdown = f"[Картинка от DALLE-2]({response['data'][0]['url']})"
+                username = message.from_user.first_name
+                markdown = f"👨 *Запрос отправлен пользователем:* {username}\n\n🤔 *Запрос:* {message.text.split(maxsplit=1)[1]}\n\n😊 *Ответ от DALLE-2:* [картинка от DALLE-2]({response['data'][0]['url']})"
                 bot.delete_message(message.chat.id, msg.message_id)
                 bot.send_message(chat_id=message.chat.id, text="✅ Ответ получен!")
                 bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
             except openai.error.OpenAIError as e:
                 bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
 
-            last_messages_dalletwo[message.chat.id] = time.time()
-
     @bot.message_handler(commands=['chatgpt'])
     def chatgpt(message):
         if message.text.lower() == "/chatgpt":
             markdown = """🚫 *Ошибка*: Команда /chatgpt оказалась пустой, запрос не может быть выполнен.
 
-Пожалуйста, укажите текст после команды /chatgpt, чтобы ChatGPT мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
+    Пожалуйста, укажите текст после команды /chatgpt, чтобы ChatGPT мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
             bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
         elif len(message.text.split(maxsplit=1)[1]) > 500:
             markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 500 символов.*"
@@ -80,6 +84,10 @@ def mainstarter():
         else:
             msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
 
+            if message.from_user.id in last_messages_chatgpt:
+                elapsed_time = time.time() - last_messages_chatgpt[message.from_user.id]
+                if elapsed_time < 30:
+                    time.sleep(30 - elapsed_time)
             try:
                 response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
@@ -90,7 +98,8 @@ def mainstarter():
                 max_len = 3000
                 parts = [output[i:i + max_len] for i in range(0, len(output), max_len)]
                 for part in parts:
-                    markdown = f"🤔 *Запрос:* {message.text.split(maxsplit=1)[1]}\n\n😊 *Ответ от ChatGPT:* {part}"
+                    username = message.from_user.first_name
+                    markdown = f"👨 *Запрос отправлен пользователем:* {username}\n\n🤔 *Запрос:* {message.text.split(maxsplit=1)[1]}\n\n😊 *Ответ от ChatGPT:* {part}"
                     bot.delete_message(message.chat.id, msg.message_id)
                     bot.send_message(chat_id=message.chat.id, text="✅ Ответ получен!")
                     bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
@@ -101,6 +110,8 @@ def mainstarter():
 
     @bot.message_handler(content_types=['text'])
     def send_text(message):
+        if message.chat.type != 'private':
+            return
         if message.text.lower() == "мои проекты":
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("Группа VK", url="https://vk.com/chatgptcontent")
