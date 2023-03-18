@@ -3,7 +3,7 @@
 Бесплатная реализация ChatGPT и DALLE-2 в Telegram на базе telebot + openai.
 
 # 👾Меню
-![example](https://i.imgur.com/7RyJqLT.png)
+![example](https://i.imgur.com/mWjd7aQ.png)
 
 # 🖤Пример работы
 ![example](https://i.imgur.com/YSX3cyP.png)
