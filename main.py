@@ -88,12 +88,14 @@ def mainstarter():
             markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
             bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
         else:
-            msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
-
+            
             if message.from_user.id in last_messages_chatgpt:
                 elapsed_time = time.time() - last_messages_chatgpt[message.from_user.id]
                 if elapsed_time < 30:
                     time.sleep(30 - elapsed_time)
+
+            msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
+
             try:
                 response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
