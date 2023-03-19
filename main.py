@@ -61,7 +61,7 @@ def mainstarter():
                 )
 
                 username = message.from_user.first_name
-                markdown = f"👨 *Запрос отправлен пользователем:* {username}\n\n🤔 *Запрос:* {message.text.split(maxsplit=1)[1]}\n\n😊 *Ответ от DALLE-2:* [картинка от DALLE-2]({response['data'][0]['url']})"
+                markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от DALLE-2:* [картинка от DALLE-2]({response['data'][0]['url']})"
                 bot.delete_message(message.chat.id, msg.message_id)
                 bot.send_message(chat_id=message.chat.id, text="✅ Ответ получен!")
                 bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
@@ -99,7 +99,7 @@ def mainstarter():
                 parts = [output[i:i + max_len] for i in range(0, len(output), max_len)]
                 for part in parts:
                     username = message.from_user.first_name
-                    markdown = f"👨 *Запрос отправлен пользователем:* {username}\n\n🤔 *Запрос:* {message.text.split(maxsplit=1)[1]}\n\n😊 *Ответ от ChatGPT:* {part}"
+                    markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от ChatGPT:* `{part}`"
                     bot.delete_message(message.chat.id, msg.message_id)
                     bot.send_message(chat_id=message.chat.id, text="✅ Ответ получен!")
                     bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
