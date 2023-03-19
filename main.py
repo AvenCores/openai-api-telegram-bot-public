@@ -21,10 +21,16 @@ def mainstarter():
     @bot.message_handler(commands=['start'])
     def start_message(message):
         if message.chat.type != 'private':
-            markdown = """🚨 *ПРЕДУПРЕЖДЕНИЕ*: Пожалуйста, обратите внимание, что команда `/start` доступна только в *личных сообщениях* с нашим ботом. Использование этой команды в групповых чатах или каналах может вызвать непредвиденные ошибки и нарушения конфиденциальности.
+            if message.text.lower() == "/start":
+                markdown = """🚨 *ПРЕДУПРЕЖДЕНИЕ*: Пожалуйста, обратите внимание, что команда `/start` доступна только в *личных сообщениях* с нашим ботом. Использование этой команды в групповых чатах или каналах может вызвать непредвиденные ошибки и нарушения конфиденциальности.
 
 🙏 Пожалуйста, следуйте этому правилу, чтобы избежать любых проблем. Если у вас есть какие-либо вопросы или проблемы, пожалуйста, обратитесь к нашей документации или напишите в техническую поддержку. Спасибо за понимание!"""
-            bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+                bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+            elif message.text.lower() == "/start@avencoreschatgpt_bot":
+                markdown = """🚨 *ПРЕДУПРЕЖДЕНИЕ*: Пожалуйста, обратите внимание, что команда `/start@avencoreschatgpt_bot` доступна только в *личных сообщениях* с нашим ботом. Использование этой команды в групповых чатах или каналах может вызвать непредвиденные ошибки и нарушения конфиденциальности.
+
+🙏 Пожалуйста, следуйте этому правилу, чтобы избежать любых проблем. Если у вас есть какие-либо вопросы или проблемы, пожалуйста, обратитесь к нашей документации или напишите в техническую поддержку. Спасибо за понимание!"""
+                bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
             return
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         button1 = types.InlineKeyboardButton("Мои проекты")
@@ -67,16 +73,11 @@ def mainstarter():
             msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
 
             try:
-                is_new_message = False
                 response = openai.Image.create(
                     prompt=message.text,
                     n=1,
                     size="1024x1024"
                 )
-
-                if is_new_message:
-                    bot.send_message(message.chat.id, "❌ Увы, но данный запрос не может быть обработан.")
-                    return
 
                 username = message.from_user.first_name
                 output = response['data'][0]['url']
@@ -138,46 +139,43 @@ def mainstarter():
             msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
 
             try:
-                is_new_message = False
                 response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
                     messages=[{"role": "user", "content": message.text}],
                 )
 
-                if is_new_message:
-                    bot.send_message(message.chat.id, "❌ Увы, но данный запрос не может быть обработан.")
-                    return
-
                 output = response["choices"][0]["message"]["content"]
-                max_len = 3000
-                parts = [output[i:i + max_len] for i in range(0, len(output), max_len)]
-                for part in parts:
-                    username = message.from_user.first_name
-                    markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от ChatGPT:* `{part}`"
-                    bot.delete_message(message.chat.id, msg.message_id)
-                    bot.send_message(chat_id=message.chat.id, text="✅ Ответ получен!")
-                    bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+                username = message.from_user.first_name
+                markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от ChatGPT:* `{output}`"
+                bot.delete_message(message.chat.id, msg.message_id)
+                bot.send_message(chat_id=message.chat.id, text="✅ Ответ получен!")
 
-                    f = open("chatlog.txt", "a")
-                    f.writelines('---------------------------------------------------------------------------')
-                    f.writelines('\n')
-                    f.writelines(f'Model: ChatGPT')
-                    f.writelines('\n')
-                    f.writelines(f'ChatID: {message.chat.id}')
-                    f.writelines('\n')
-                    f.writelines(f'UserID: {message.from_user.id}')
-                    f.writelines('\n')
-                    f.writelines(f'Username: {message.from_user.username}')
-                    f.writelines('\n')
-                    f.writelines(f'Date: {datetime.fromtimestamp(message.date)}')
-                    f.writelines('\n')
-                    f.writelines(f'Prompt: {message.text.split(maxsplit=1)[1]}')
-                    f.writelines('\n')
-                    f.writelines(f'AI reply: {output}')
-                    f.writelines('\n')
-                    f.writelines('---------------------------------------------------------------------------')
-                    f.writelines('\n\n')
-                    f.close
+                if len(markdown) > 3800:
+                    for x in range(0, len(markdown), 3800):
+                        bot.send_message(message.chat.id, markdown[x:x+3800], parse_mode="Markdown")
+                else:
+                    bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
+
+                f = open("chatlog.txt", "a")
+                f.writelines('---------------------------------------------------------------------------')
+                f.writelines('\n')
+                f.writelines(f'Model: ChatGPT')
+                f.writelines('\n')
+                f.writelines(f'ChatID: {message.chat.id}')
+                f.writelines('\n')
+                f.writelines(f'UserID: {message.from_user.id}')
+                f.writelines('\n')
+                f.writelines(f'Username: {message.from_user.username}')
+                f.writelines('\n')
+                f.writelines(f'Date: {datetime.fromtimestamp(message.date)}')
+                f.writelines('\n')
+                f.writelines(f'Prompt: {message.text.split(maxsplit=1)[1]}')
+                f.writelines('\n')
+                f.writelines(f'AI reply: {output}')
+                f.writelines('\n')
+                f.writelines('---------------------------------------------------------------------------')
+                f.writelines('\n\n')
+                f.close
 
             except openai.error.OpenAIError as e:
                 bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
