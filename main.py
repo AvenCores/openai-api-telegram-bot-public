@@ -148,7 +148,6 @@ def mainstarter():
                     bot.send_message(message.chat.id, "❌ Увы, но данный запрос не может быть обработан.")
                     return
 
-
                 output = response["choices"][0]["message"]["content"]
                 max_len = 3000
                 parts = [output[i:i + max_len] for i in range(0, len(output), max_len)]
