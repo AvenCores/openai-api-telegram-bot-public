@@ -75,6 +75,7 @@ def mainstarter():
                 )
 
                 if is_new_message:
+                    bot.send_message(message.chat.id, "❌ Увы, но данный запрос не может быть обработан.")
                     return
 
                 username = message.from_user.first_name
@@ -144,7 +145,9 @@ def mainstarter():
                 )
 
                 if is_new_message:
+                    bot.send_message(message.chat.id, "❌ Увы, но данный запрос не может быть обработан.")
                     return
+
 
                 output = response["choices"][0]["message"]["content"]
                 max_len = 3000
