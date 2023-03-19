@@ -149,12 +149,7 @@ def mainstarter():
                 markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от ChatGPT:* `{output}`"
                 bot.delete_message(message.chat.id, msg.message_id)
                 bot.send_message(chat_id=message.chat.id, text="✅ Ответ получен!")
-
-                if len(markdown) > 3800:
-                    for x in range(0, len(markdown), 3800):
-                        bot.send_message(message.chat.id, markdown[x:x+3800], parse_mode="Markdown")
-                else:
-                    bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
+                bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
 
                 f = open("chatlog.txt", "a")
                 f.writelines('---------------------------------------------------------------------------')
