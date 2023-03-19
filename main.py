@@ -67,11 +67,15 @@ def mainstarter():
             msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
 
             try:
+                is_new_message = False
                 response = openai.Image.create(
                     prompt=message.text,
                     n=1,
                     size="1024x1024"
                 )
+
+                if is_new_message:
+                    return
 
                 username = message.from_user.first_name
                 markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от DALLE-2:* [картинка от DALLE-2]({response['data'][0]['url']})"
@@ -111,10 +115,14 @@ def mainstarter():
             msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
 
             try:
+                is_new_message = False
                 response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
                     messages=[{"role": "user", "content": message.text}],
                 )
+
+                if is_new_message:
+                    return
 
                 output = response["choices"][0]["message"]["content"]
                 max_len = 3000
