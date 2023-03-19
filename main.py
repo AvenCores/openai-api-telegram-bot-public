@@ -49,7 +49,11 @@ def mainstarter():
             markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
             bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
         else:
-            last_messages_dalletwo[message.chat.id] = time.time()
+
+            if message.from_user.id in last_messages_dalletwo:
+                elapsed_time = time.time() - last_messages_dalletwo[message.from_user.id]
+                if elapsed_time < 30:
+                    time.sleep(30 - elapsed_time)
 
             msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
 
@@ -67,6 +71,8 @@ def mainstarter():
                 bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
             except openai.error.OpenAIError as e:
                 bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
+
+            last_messages_dalletwo[message.chat.id] = time.time()
 
     @bot.message_handler(commands=['chatgpt'])
     def chatgpt(message):
