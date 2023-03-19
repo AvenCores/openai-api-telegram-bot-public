@@ -78,10 +78,32 @@ def mainstarter():
                     return
 
                 username = message.from_user.first_name
-                markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от DALLE-2:* [картинка от DALLE-2]({response['data'][0]['url']})"
+                output = response['data'][0]['url']
+                markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от DALLE-2:* [картинка от DALLE-2]({output})"
                 bot.delete_message(message.chat.id, msg.message_id)
                 bot.send_message(chat_id=message.chat.id, text="✅ Ответ получен!")
                 bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+
+                f = open("chatlog.txt", "a")
+                f.writelines('---------------------------------------------------------------------------')
+                f.writelines('\n')
+                f.writelines(f'Model: DALLE-2')
+                f.writelines('\n')
+                f.writelines(f'ChatID: {message.chat.id}')
+                f.writelines('\n')
+                f.writelines(f'UserID: {message.from_user.id}')
+                f.writelines('\n')
+                f.writelines(f'Username: {message.from_user.username}')
+                f.writelines('\n')
+                f.writelines(f'Date: {datetime.fromtimestamp(message.date)}')
+                f.writelines('\n')
+                f.writelines(f'User Message: {message.text.split(maxsplit=1)[1]}')
+                f.writelines('\n')
+                f.writelines(f'AI reply: {output}')
+                f.writelines('\n')
+                f.writelines('---------------------------------------------------------------------------')
+                f.writelines('\n\n')
+                f.close
             except openai.error.OpenAIError as e:
                 bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
 
@@ -133,6 +155,28 @@ def mainstarter():
                     bot.delete_message(message.chat.id, msg.message_id)
                     bot.send_message(chat_id=message.chat.id, text="✅ Ответ получен!")
                     bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+
+                    f = open("chatlog.txt", "a")
+                    f.writelines('---------------------------------------------------------------------------')
+                    f.writelines('\n')
+                    f.writelines(f'Model: ChatGPT')
+                    f.writelines('\n')
+                    f.writelines(f'ChatID: {message.chat.id}')
+                    f.writelines('\n')
+                    f.writelines(f'UserID: {message.from_user.id}')
+                    f.writelines('\n')
+                    f.writelines(f'Username: {message.from_user.username}')
+                    f.writelines('\n')
+                    f.writelines(f'Date: {datetime.fromtimestamp(message.date)}')
+                    f.writelines('\n')
+                    f.writelines(f'Prompt: {message.text.split(maxsplit=1)[1]}')
+                    f.writelines('\n')
+                    f.writelines(f'AI reply: {output}')
+                    f.writelines('\n')
+                    f.writelines('---------------------------------------------------------------------------')
+                    f.writelines('\n\n')
+                    f.close
+
             except openai.error.OpenAIError as e:
                 bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
 
