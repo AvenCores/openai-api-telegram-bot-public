@@ -96,6 +96,9 @@ def mainstarter():
                     bot.delete_message(message.chat.id, msgtwo.message_id)
                     bot.send_message(message.chat.id, text="❌ Увы, но данный запрос не может быть обработан.")
 
+                message_date = datetime.fromtimestamp(message.date, timezone(timebot))
+                message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
+
                 f = open("chatlog.txt", "a")
                 f.writelines('---------------------------------------------------------------------------')
                 f.writelines('\n')
@@ -107,7 +110,7 @@ def mainstarter():
                 f.writelines('\n')
                 f.writelines(f'Username: {message.from_user.username}')
                 f.writelines('\n')
-                f.writelines(f'Date: {datetime.fromtimestamp(message.date, timezone(timebot))}')
+                f.writelines(f'Date: {message_date_string}')
                 f.writelines('\n')
                 f.writelines(f'User Message: {message.text.split(maxsplit=1)[1]}')
                 f.writelines('\n')
@@ -166,6 +169,9 @@ def mainstarter():
                     bot.delete_message(message.chat.id, msgtwo.message_id)
                     bot.send_message(message.chat.id, text="❌ Увы, но данный запрос не может быть обработан.")
 
+                message_date = datetime.fromtimestamp(message.date, timezone(timebot))
+                message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
+
                 f = open("chatlog.txt", "a")
                 f.writelines('---------------------------------------------------------------------------')
                 f.writelines('\n')
@@ -177,7 +183,7 @@ def mainstarter():
                 f.writelines('\n')
                 f.writelines(f'Username: {message.from_user.username}')
                 f.writelines('\n')
-                f.writelines(f'Date: {datetime.fromtimestamp(message.date, timezone(timebot))}')
+                f.writelines(f'Date: {message_date_string}')
                 f.writelines('\n')
                 f.writelines(f'Prompt: {message.text.split(maxsplit=1)[1]}')
                 f.writelines('\n')
