@@ -30,12 +30,12 @@ def mainstarter():
                 markdown = """🚨 *ПРЕДУПРЕЖДЕНИЕ*: Пожалуйста, обратите внимание, что команда `/start` доступна только в *личных сообщениях* с нашим ботом. Использование этой команды в групповых чатах или каналах может вызвать непредвиденные ошибки и нарушения конфиденциальности.
 
 🙏 Пожалуйста, следуйте этому правилу, чтобы избежать любых проблем. Если у вас есть какие-либо вопросы или проблемы, пожалуйста, обратитесь к нашей документации или напишите в техническую поддержку. Спасибо за понимание!"""
-                bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+                bot.reply_to(message, text=markdown, parse_mode="Markdown")
             elif message.text.lower() == f"/start@{botname}":
                 markdown = f"""🚨 *ПРЕДУПРЕЖДЕНИЕ*: Пожалуйста, обратите внимание, что команда `/start@{botname}` доступна только в *личных сообщениях* с нашим ботом. Использование этой команды в групповых чатах или каналах может вызвать непредвиденные ошибки и нарушения конфиденциальности.
 
 🙏 Пожалуйста, следуйте этому правилу, чтобы избежать любых проблем. Если у вас есть какие-либо вопросы или проблемы, пожалуйста, обратитесь к нашей документации или напишите в техническую поддержку. Спасибо за понимание!"""
-                bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+                bot.reply_to(message, text=markdown, parse_mode="Markdown")
             return
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         button1 = types.InlineKeyboardButton("Мои проекты")
@@ -56,18 +56,18 @@ def mainstarter():
             markdown = f"""🚫 *Ошибка:* Команда `/dalle2@{botname}` оказалась пустой, запрос не может быть выполнен.
 
 Пожалуйста, укажите текст после команды `/dalle2@{botname}`, чтобы DALLE-2 мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
-            bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         if message.text.lower() == "/dalle2":
             markdown = """🚫 *Ошибка*: Команда `/dalle2` оказалась пустой, запрос не может быть выполнен.
 
 Пожалуйста, укажите текст после команды `/dalle2`, чтобы DALLE-2 мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
-            bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         elif len(message.text.split(maxsplit=1)[1]) > 500:
             markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 500 символов.*"
-            bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         elif message.chat.id in last_messages_dalletwo and time.time() - last_messages_dalletwo[message.chat.id] < 30:
             markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
-            bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         else:
 
             if message.from_user.id in last_messages_dalletwo:
@@ -75,7 +75,7 @@ def mainstarter():
                 if elapsed_time < 30:
                     time.sleep(30 - elapsed_time)
 
-            msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
+            msg = bot.reply_to(message, "📄 Идет загрузка, подождите...")
 
             try:
                 response = openai.Image.create(
@@ -88,13 +88,13 @@ def mainstarter():
                 output = response['data'][0]['url']
                 markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от DALLE-2:* [картинка от DALLE-2]({output})"
                 bot.delete_message(message.chat.id, msg.message_id)
-                msgtwo = bot.send_message(chat_id=message.chat.id, text="✅ Ответ получен!")
+                msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
 
                 try:
                     bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
                 except:
                     bot.delete_message(message.chat.id, msgtwo.message_id)
-                    bot.send_message(message.chat.id, text="❌ Увы, но данный запрос не может быть обработан.")
+                    bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.")
 
                 message_date = datetime.fromtimestamp(message.date, timezone(timebot))
                 message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
@@ -120,7 +120,8 @@ def mainstarter():
                 f.writelines('\n\n')
                 f.close
             except openai.error.OpenAIError as e:
-                bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
+                bot.delete_message(message.chat.id, msg.message_id)
+                bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.")
 
             last_messages_dalletwo[message.chat.id] = time.time()
 
@@ -130,18 +131,18 @@ def mainstarter():
             markdown = f"""🚫 *Ошибка*: Команда `/chatgpt@{botname}` оказалась пустой, запрос не может быть выполнен.
 
 Пожалуйста, укажите текст после команды `/chatgpt@{botname}`, чтобы ChatGPT мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
-            bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         if message.text.lower() == "/chatgpt":
             markdown = """🚫 *Ошибка*: Команда `/chatgpt` оказалась пустой, запрос не может быть выполнен.
 
 Пожалуйста, укажите текст после команды `/chatgpt`, чтобы ChatGPT мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
-            bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         elif len(message.text.split(maxsplit=1)[1]) > 500:
             markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 500 символов.*"
-            bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         elif message.chat.id in last_messages_chatgpt and time.time() - last_messages_chatgpt[message.chat.id] < 30:
             markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
-            bot.send_message(chat_id=message.chat.id, text=markdown, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         else:
 
             if message.from_user.id in last_messages_chatgpt:
@@ -149,7 +150,7 @@ def mainstarter():
                 if elapsed_time < 30:
                     time.sleep(30 - elapsed_time)
 
-            msg = bot.send_message(message.chat.id, "📄 Идет загрузка, подождите...")
+            msg = bot.reply_to(message, "📄 Идет загрузка, подождите...")
 
             try:
                 response = openai.ChatCompletion.create(
@@ -161,13 +162,13 @@ def mainstarter():
                 username = message.from_user.first_name
                 markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от ChatGPT:* `{output}`"
                 bot.delete_message(message.chat.id, msg.message_id)
-                msgtwo = bot.send_message(chat_id=message.chat.id, text="✅ Ответ получен!")
+                msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
 
                 try:
                     bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
                 except:
                     bot.delete_message(message.chat.id, msgtwo.message_id)
-                    bot.send_message(message.chat.id, text="❌ Увы, но данный запрос не может быть обработан.")
+                    bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.")
 
                 message_date = datetime.fromtimestamp(message.date, timezone(timebot))
                 message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
@@ -194,7 +195,8 @@ def mainstarter():
                 f.close
 
             except openai.error.OpenAIError as e:
-                bot.edit_message_text("❌ Увы, но данный запрос не может быть обработан.", chat_id=message.chat.id, message_id=msg.message_id)
+                bot.delete_message(message.chat.id, msg.message_id)
+                bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.")
 
             last_messages_chatgpt[message.chat.id] = time.time()
 
