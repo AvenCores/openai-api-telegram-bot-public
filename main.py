@@ -5,8 +5,8 @@ from datetime import datetime
 from pytz import timezone
 from telebot import types
 from sys import platform
-import openai
 import telebot
+import openai
 import time
 
 from botapiconfig import openaiapi, telegrambotapi
@@ -27,23 +27,15 @@ def mainstarter():
     def start_message(message):
         if message.chat.type != 'private':
             if message.text.lower() == "/start":
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markdown = """🚨 *ПРЕДУПРЕЖДЕНИЕ*: Пожалуйста, обратите внимание, что команда `/start` доступна только в *личных сообщениях* с нашим ботом. Использование этой команды в групповых чатах или каналах может вызвать непредвиденные ошибки и нарушения конфиденциальности.
 
 🙏 Пожалуйста, следуйте этому правилу, чтобы избежать любых проблем. Если у вас есть какие-либо вопросы или проблемы, пожалуйста, обратитесь к нашей документации или напишите в техническую поддержку. Спасибо за понимание!"""
-                markup.add(button1)
-                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
+                bot.reply_to(message, text=markdown, parse_mode="Markdown")
             elif message.text.lower() == f"/start@{botname}":
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markdown = f"""🚨 *ПРЕДУПРЕЖДЕНИЕ*: Пожалуйста, обратите внимание, что команда `/start@{botname}` доступна только в *личных сообщениях* с нашим ботом. Использование этой команды в групповых чатах или каналах может вызвать непредвиденные ошибки и нарушения конфиденциальности.
 
 🙏 Пожалуйста, следуйте этому правилу, чтобы избежать любых проблем. Если у вас есть какие-либо вопросы или проблемы, пожалуйста, обратитесь к нашей документации или напишите в техническую поддержку. Спасибо за понимание!"""
-                markup.add(button1)
-                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
+                bot.reply_to(message, text=markdown, parse_mode="Markdown")
             return
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         button1 = types.InlineKeyboardButton("Мои проекты")
@@ -61,33 +53,21 @@ def mainstarter():
     @bot.message_handler(commands=['dalle2'])
     def dalletwo(message):
         if message.text.lower() == f"/dalle2@{botname}":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             markdown = f"""🚫 *Ошибка:* Команда `/dalle2@{botname}` оказалась пустой, запрос не может быть выполнен.
 
 Пожалуйста, укажите текст после команды `/dalle2@{botname}`, чтобы DALLE-2 мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
-            markup.add(button1)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         if message.text.lower() == "/dalle2":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             markdown = """🚫 *Ошибка*: Команда `/dalle2` оказалась пустой, запрос не может быть выполнен.
 
 Пожалуйста, укажите текст после команды `/dalle2`, чтобы DALLE-2 мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
-            markup.add(button1)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         elif len(message.text.split(maxsplit=1)[1]) > 500:
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 500 символов.*"
-            markup.add(button1)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         elif message.chat.id in last_messages_dalletwo and time.time() - last_messages_dalletwo[message.chat.id] < 30:
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
-            markup.add(button1)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         else:
 
             if message.from_user.id in last_messages_dalletwo:
@@ -114,10 +94,7 @@ def mainstarter():
                     bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
                 except:
                     bot.delete_message(message.chat.id, msgtwo.message_id)
-                    markup = types.InlineKeyboardMarkup()
-                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                    markup.add(button1)
-                    bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.", reply_markup=markup)
+                    bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.")
 
                 message_date = datetime.fromtimestamp(message.date, timezone(timebot))
                 message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
@@ -144,43 +121,28 @@ def mainstarter():
                 f.close
             except openai.error.OpenAIError as e:
                 bot.delete_message(message.chat.id, msg.message_id)
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                markup.add(button1)
-                bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.", reply_markup=markup)
+                bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.")
 
             last_messages_dalletwo[message.chat.id] = time.time()
 
     @bot.message_handler(commands=['chatgpt'])
     def chatgpt(message):
         if message.text.lower() == f"/chatgpt@{botname}":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             markdown = f"""🚫 *Ошибка*: Команда `/chatgpt@{botname}` оказалась пустой, запрос не может быть выполнен.
 
 Пожалуйста, укажите текст после команды `/chatgpt@{botname}`, чтобы ChatGPT мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
-            markup.add(button1)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         if message.text.lower() == "/chatgpt":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             markdown = """🚫 *Ошибка*: Команда `/chatgpt` оказалась пустой, запрос не может быть выполнен.
 
 Пожалуйста, укажите текст после команды `/chatgpt`, чтобы ChatGPT мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 💻🤖"""
-            markup.add(button1)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         elif len(message.text.split(maxsplit=1)[1]) > 500:
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 500 символов.*"
-            markup.add(button1)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         elif message.chat.id in last_messages_chatgpt and time.time() - last_messages_chatgpt[message.chat.id] < 30:
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
-            markup.add(button1)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            bot.reply_to(message, text=markdown, parse_mode="Markdown")
         else:
 
             if message.from_user.id in last_messages_chatgpt:
@@ -206,10 +168,7 @@ def mainstarter():
                     bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
                 except:
                     bot.delete_message(message.chat.id, msgtwo.message_id)
-                    markup = types.InlineKeyboardMarkup()
-                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                    markup.add(button1)
-                    bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.", reply_markup=markup)
+                    bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.")
 
                 message_date = datetime.fromtimestamp(message.date, timezone(timebot))
                 message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
@@ -237,11 +196,7 @@ def mainstarter():
 
             except openai.error.OpenAIError as e:
                 bot.delete_message(message.chat.id, msg.message_id)
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                bot.delete_message(message.chat.id, msgtwo.message_id)
-                markup.add(button1)
-                bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.", reply_markup=markup)
+                bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.")
 
             last_messages_chatgpt[message.chat.id] = time.time()
 
@@ -333,22 +288,14 @@ def mainstarter():
 
 
         else:
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            markdown = """❌ Ошибка! Команда не найдена 🤔
+            markdown = """Ошибка! Команда не найдена 🤔
 
 Чтобы узнать, как использовать этот Telegram бот, отправьте сообщение /start 👉👀
 
 Это поможет вам ознакомиться со всеми доступными функциями и начать работу с ботом. Если у вас возникнут какие-либо вопросы, не стесняйтесь обращаться в техническая поддержку нашего Telegram бота 🤗
 
 Спасибо за ваше понимание! 🙏"""
-            markup.add(button1)
-            bot.reply_to(message, text=markdown, parse_mode="Markdown")
-
-    @bot.callback_query_handler(func=lambda call: call.data == "dellthiserror")
-    def dellthiserror(call):
-        bot.answer_callback_query(callback_query_id=call.id, text="Уведомление скрыто")
-        bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+            bot.reply_to(message, markdown, parse_mode="Markdown")
 
     bot.polling(none_stop=True)
 
