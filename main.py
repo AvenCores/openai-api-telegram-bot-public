@@ -4,6 +4,7 @@
 from datetime import datetime
 from pytz import timezone
 from telebot import types
+from telebot import util
 from sys import platform
 import telebot
 import openai
@@ -203,12 +204,9 @@ def mainstarter():
                 msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
 
                 try:
-                    if len(markdown) > 4096:
-                        while len(markdown) > 0:
-                            bot.send_message(message.chat.id, markdown[:4096], parse_mode="Markdown")
-                            markdown = markdown[4096:]
-                    else:
-                        bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
+                    splitted_text = util.smart_split(markdown, chars_per_string=4096)
+                    for text in splitted_text:
+                        bot.send_message(message.chat.id, text, parse_mode="Markdown")
                 except:
                     bot.delete_message(message.chat.id, msgtwo.message_id)
                     markup = types.InlineKeyboardMarkup()
