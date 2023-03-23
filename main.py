@@ -4,7 +4,6 @@
 from datetime import datetime
 from pytz import timezone
 from telebot import types
-from telebot import util
 from sys import platform
 import telebot
 import openai
