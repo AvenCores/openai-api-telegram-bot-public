@@ -18,6 +18,8 @@ bot = telebot.TeleBot(telegrambotapi)
 last_messages_chatgpt = {}
 last_messages_dalletwo = {}
 
+start_time = time.time()
+
 botname = "avencoreschatgpt_bot"
 
 timebot = "Europe/Moscow"
@@ -107,7 +109,8 @@ def mainstarter():
 
                 username = message.from_user.first_name
                 output = response['data'][0]['url']
-                markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от DALLE-2:* [картинка от DALLE-2]({output})"
+                inputuser = message.text.split(maxsplit=1)[1]
+                markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{inputuser}`\n\n😊 *Ответ от DALLE-2:* [картинка от DALLE-2]({output})"
                 bot.delete_message(message.chat.id, msg.message_id)
                 msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
 
@@ -199,14 +202,13 @@ def mainstarter():
 
                 output = response["choices"][0]["message"]["content"]
                 username = message.from_user.first_name
-                markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{message.text.split(maxsplit=1)[1]}`\n\n😊 *Ответ от ChatGPT:* `{output}`"
+                inputuser = message.text.split(maxsplit=1)[1]
+                markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{inputuser}`\n\n😊 *Ответ от ChatGPT:* `{output}`"
                 bot.delete_message(message.chat.id, msg.message_id)
                 msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
 
                 try:
-                    splitted_text = util.smart_split(markdown, chars_per_string=4096)
-                    for text in splitted_text:
-                        bot.send_message(message.chat.id, text, parse_mode="Markdown")
+                    bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
                 except:
                     bot.delete_message(message.chat.id, msgtwo.message_id)
                     markup = types.InlineKeyboardMarkup()
@@ -299,11 +301,15 @@ def mainstarter():
             bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
 
         elif message.text.lower() == "статус бота":
+            current_time = time.time()
+            uptime = int(current_time - start_time)
+            uptime_str = f"{uptime // (24 * 3600)} день(-ней), {uptime // 3600 % 24} час(-ов), {uptime // 60 % 60} минут(-а), {uptime % 60} секунд(-а)"
             markdown = datetime.now().strftime(f"""*Бот работает в штатном режиме.* 🤖\n
 *Время на сервере*: %H:%M:%S ⏰
 *Дата на сервере*: %d.%m.%y 📅
 
-*Система на сервере*: {platform} 💻""")
+*Система на сервере*: {platform} 💻
+*Аптайм бота*: {uptime_str}⌛""")
             bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
 
         elif message.text.lower() == "исходный код":
