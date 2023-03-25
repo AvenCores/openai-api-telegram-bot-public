@@ -216,7 +216,10 @@ def mainstarter():
                         splitted_text = util.smart_split(output, chars_per_string=2000)
                         for text in splitted_text:
                             try:
-                                bot.send_message(message.chat.id, text=f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{inputuser}`\n\n😊 *Ответ от ChatGPT:* `{text}`", parse_mode="Markdown")
+                                if message.chat.type == 'private':
+                                    bot.send_message(message.chat.id, text=f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{inputuser}`\n\n😊 *Ответ от ChatGPT:* `{text}`", parse_mode="Markdown")
+                                elif message.chat.type in ['group', 'supergroup']:
+                                    bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🤔 Запрос: {inputuser}\n\n😊 Ответ от ChatGPT: {text}")
                             except Exception as e:
                                 print(e)
                                 pass
