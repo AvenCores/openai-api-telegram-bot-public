@@ -4,6 +4,7 @@
 from datetime import datetime
 from pytz import timezone
 from telebot import types
+from telebot import util
 from sys import platform
 import telebot
 import openai
@@ -22,6 +23,8 @@ start_time = time.time()
 botname = "avencoreschatgpt_bot"
 
 timebot = "Europe/Moscow"
+
+stickerstart = "sticker-animenazi.webp"
 
 
 def mainstarter():
@@ -55,7 +58,7 @@ def mainstarter():
         button5 = types.InlineKeyboardButton("Исходный код")
         button6 = types.InlineKeyboardButton("Статус бота")
         markup.add(button1, button2, button3, button4, button5, button6)
-        sticker = open("sticker.webp", "rb")
+        sticker = open(f"{stickerstart}", "rb")
         bot.send_sticker(message.chat.id, sticker)
         markdown = """Привет друг! 👋\n\nДанный телеграм бот основан на технологии ChatGPT и DALLE-2. 💻\n\nВы можете добавить данного бота к себе в чат и так же полноценно использовать, но учтите, что ограничения бота будут действовать на всех участников беседы сразу. 🤖\n\n*Что такое ChatGPT?* ❓\nChatGPT - это модель языкового обработки, разработанная OpenAI. Она была обучена на множестве текстов и может генерировать тексты, отвечать на вопросы и выполнять другие задачи обработки языка. 💡\n\n*Что такое DALLE-2?* ❓\nDALLE-2 - это продвинутая модель глубокого обучения, созданная OpenAI, которая может генерировать изображения и текстовые описания на основе заданного текстового ввода. 💡\n\n*Как задать вопрос ChatGPT?* ❓\nЛегко! Просто напиши /chatgpt ВАШ-ЗАПРОС 😉\n\n*Как получить картинку от DALLE-2?* ❓\nЛегко! Просто напиши /dalle2 ВАШ-ЗАПРОС 😉"""
         bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
@@ -115,7 +118,8 @@ def mainstarter():
 
                 try:
                     bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
-                except:
+                except Exception as e:
+                    print(e)
                     bot.delete_message(message.chat.id, msgtwo.message_id)
                     markup = types.InlineKeyboardMarkup()
                     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
@@ -146,6 +150,7 @@ def mainstarter():
                 f.writelines('\n\n')
                 f.close
             except openai.error.OpenAIError as e:
+                print(e)
                 bot.delete_message(message.chat.id, msg.message_id)
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
@@ -207,8 +212,16 @@ def mainstarter():
                 msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
 
                 try:
-                    bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
-                except:
+                    if 'output' in locals():
+                        splitted_text = util.smart_split(output, chars_per_string=2000)
+                        for text in splitted_text:
+                            try:
+                                bot.send_message(message.chat.id, text=f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{inputuser}`\n\n😊 *Ответ от ChatGPT:* `{text}`", parse_mode="Markdown")
+                            except Exception as e:
+                                print(e)
+                                pass
+                except Exception as e:
+                    print(e)
                     bot.delete_message(message.chat.id, msgtwo.message_id)
                     markup = types.InlineKeyboardMarkup()
                     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
@@ -240,6 +253,7 @@ def mainstarter():
                 f.close
 
             except openai.error.OpenAIError as e:
+                print(e)
                 bot.delete_message(message.chat.id, msg.message_id)
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
