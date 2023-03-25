@@ -378,5 +378,6 @@ def mainstarter():
 while True:
     try:
         mainstarter()
-    except Exception:
+    except Exception as e:
+        print(e)
         continue
