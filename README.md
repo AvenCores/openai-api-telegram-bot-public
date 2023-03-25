@@ -16,7 +16,7 @@
 + **`sh start.sh`** or **`start.bat`**
 
 # 👾 Меню
-![example](https://i.imgur.com/WRFrtBL.png)
+![example](https://i.imgur.com/IT1dTKq.png)
 
 # 🖤 Пример работы
 ![example](https://i.imgur.com/EuCHVEH.png)
