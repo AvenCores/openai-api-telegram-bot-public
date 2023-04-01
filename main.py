@@ -112,12 +112,11 @@ def mainstarter():
                 username = message.from_user.first_name
                 output = response['data'][0]['url']
                 inputuser = message.text.split(maxsplit=1)[1]
-                markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{inputuser}`\n\n😊 *Ответ от DALLE-2:* [картинка от DALLE-2]({output})"
                 bot.delete_message(message.chat.id, msg.message_id)
                 msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
 
                 try:
-                    bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
+                    bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🤔 Запрос: {inputuser}\n\n😊 Ответ от DALLE-2: [картинка от DALLE-2]({output})")
                 except Exception as e:
                     print(e)
                     bot.delete_message(message.chat.id, msgtwo.message_id)
@@ -207,7 +206,6 @@ def mainstarter():
                 output = response["choices"][0]["message"]["content"]
                 username = message.from_user.first_name
                 inputuser = message.text.split(maxsplit=1)[1]
-                markdown = f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{inputuser}`\n\n😊 *Ответ от ChatGPT:* `{output}`"
                 bot.delete_message(message.chat.id, msg.message_id)
                 msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
 
@@ -216,13 +214,11 @@ def mainstarter():
                         splitted_text = util.smart_split(output, chars_per_string=2000)
                         for text in splitted_text:
                             try:
-                                if message.chat.type == 'private':
-                                    bot.send_message(message.chat.id, text=f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{inputuser}`\n\n😊 *Ответ от ChatGPT:* `{text}`", parse_mode="Markdown")
-                                elif message.chat.type in ['group', 'supergroup']:
-                                    bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🤔 Запрос: {inputuser}\n\n😊 Ответ от ChatGPT: {text}")
+                                bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🤔 Запрос: {inputuser}\n\n😊 Ответ от ChatGPT: {text}")
                             except Exception as e:
                                 print(e)
                                 pass
+
                 except Exception as e:
                     print(e)
                     bot.delete_message(message.chat.id, msgtwo.message_id)
