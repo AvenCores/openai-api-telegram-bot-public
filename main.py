@@ -322,7 +322,7 @@ def mainstarter():
 *Дата на сервере*: %d.%m.%y 📅
 
 *Система на сервере*: {platform} 💻
-*Аптайм бота*: {uptime_str}⌛""")
+*Аптайм бота*: {uptime_str} ⌛""")
             bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
 
         elif message.text.lower() == "исходный код":
