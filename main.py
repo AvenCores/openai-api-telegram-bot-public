@@ -6,6 +6,7 @@ from pytz import timezone
 from telebot import types
 from telebot import util
 from sys import platform
+from requests import get
 import telebot
 import openai
 import time
@@ -116,14 +117,14 @@ def mainstarter():
                 msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
 
                 try:
-                    bot.send_message(message.chat.id, text=f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🤔 *Запрос:* `{inputuser}`\n\n😊 *Ответ от DALLE-2:* [картинка от DALLE-2]({output})", parse_mode="Markdown")
+                    bot.send_message(message.chat.id, text=f"👨 *Запрос отправлен пользователем:* `{username}`\n\n🎈 Айди сообщения: `{message.message_id}`\n\n🤔 *Запрос:* `{inputuser}`\n\n👾 *Ответ от DALLE-2:* [картинка от DALLE-2]({output})", parse_mode="Markdown")
                 except Exception as e:
                     print(e)
                     bot.delete_message(message.chat.id, msgtwo.message_id)
                     markup = types.InlineKeyboardMarkup()
                     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                     markup.add(button1)
-                    bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.", reply_markup=markup)
+                    bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан. Вероятнее всего он нарушает оправила корпорации OpenAI.", reply_markup=markup)
 
                 message_date = datetime.fromtimestamp(message.date, timezone(timebot))
                 message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
@@ -131,9 +132,11 @@ def mainstarter():
                 f = open("chatlog.txt", "a")
                 f.writelines('---------------------------------------------------------------------------')
                 f.writelines('\n')
-                f.writelines(f'Model: DALLE-2')
+                f.writelines(f'Model: ChatGPT')
                 f.writelines('\n')
                 f.writelines(f'ChatID: {message.chat.id}')
+                f.writelines('\n')
+                f.writelines(f'MessageID: {message.message_id}')
                 f.writelines('\n')
                 f.writelines(f'UserID: {message.from_user.id}')
                 f.writelines('\n')
@@ -141,7 +144,7 @@ def mainstarter():
                 f.writelines('\n')
                 f.writelines(f'Date: {message_date_string}')
                 f.writelines('\n')
-                f.writelines(f'User Message: {message.text.split(maxsplit=1)[1]}')
+                f.writelines(f'Prompt: {message.text.split(maxsplit=1)[1]}')
                 f.writelines('\n')
                 f.writelines(f'AI reply: {output}')
                 f.writelines('\n')
@@ -204,6 +207,7 @@ def mainstarter():
                     messages=[{"role": "user", "content": message.text}],
                 )
 
+                total_tokens = response['usage']['total_tokens']
                 output = response["choices"][0]["message"]["content"]
                 username = message.from_user.first_name
                 inputuser = message.text.split(maxsplit=1)[1]
@@ -215,7 +219,7 @@ def mainstarter():
                         splitted_text = util.smart_split(output, chars_per_string=2000)
                         for text in splitted_text:
                             try:
-                                bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🤔 Запрос: {inputuser}\n\n😊 Ответ от ChatGPT: {text}")
+                                bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🎈 Айди сообщения: {message.message_id}\n\n💲 Затрачено токенов: {total_tokens}\n\n🤔 Запрос: {inputuser}\n\n👾 Ответ от ChatGPT: {text}")
                             except Exception as e:
                                 print(e)
                                 pass
@@ -237,6 +241,8 @@ def mainstarter():
                 f.writelines(f'Model: ChatGPT')
                 f.writelines('\n')
                 f.writelines(f'ChatID: {message.chat.id}')
+                f.writelines('\n')
+                f.writelines(f'MessageID: {message.message_id}')
                 f.writelines('\n')
                 f.writelines(f'UserID: {message.from_user.id}')
                 f.writelines('\n')
@@ -321,7 +327,7 @@ def mainstarter():
 *Время на сервере*: %H:%M:%S ⏰
 *Дата на сервере*: %d.%m.%y 📅
 
-*Система на сервере*: {platform} 💻
+*Система (платформа) на сервере*: {platform} 💻
 *Аптайм бота*: {uptime_str} ⌛""")
             bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
 
