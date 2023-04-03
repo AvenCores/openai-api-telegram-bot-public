@@ -131,7 +131,7 @@ def mainstarter():
                 f = open("chatlog.txt", "a")
                 f.writelines('---------------------------------------------------------------------------')
                 f.writelines('\n')
-                f.writelines(f'Model: ChatGPT')
+                f.writelines(f'Model: DALLE-2')
                 f.writelines('\n')
                 f.writelines(f'ChatID: {message.chat.id}')
                 f.writelines('\n')
