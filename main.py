@@ -6,7 +6,6 @@ from pytz import timezone
 from telebot import types
 from telebot import util
 from sys import platform
-from requests import get
 import telebot
 import openai
 import time
