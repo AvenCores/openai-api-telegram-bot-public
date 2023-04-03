@@ -19,7 +19,7 @@
 ![example](https://i.imgur.com/IT1dTKq.png)
 
 # 🖤 Пример работы
-![example](https://i.imgur.com/EuCHVEH.png)
+![example](https://i.imgur.com/bnEepgs.png)
 
 # 💰 Поддержать проект:
 
