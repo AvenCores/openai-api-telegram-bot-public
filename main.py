@@ -123,7 +123,7 @@ def mainstarter():
                     markup = types.InlineKeyboardMarkup()
                     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                     markup.add(button1)
-                    bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан. Вероятнее всего он нарушает оправила корпорации OpenAI.", reply_markup=markup)
+                    bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.", reply_markup=markup)
 
                 message_date = datetime.fromtimestamp(message.date, timezone(timebot))
                 message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
@@ -157,7 +157,7 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан.", reply_markup=markup)
+                bot.reply_to(message, text="❌ Увы, но данный запрос не может быть обработан. Вероятнее всего он нарушает оправила корпорации OpenAI.", reply_markup=markup)
 
             last_messages_dalletwo[message.chat.id] = time.time()
 
