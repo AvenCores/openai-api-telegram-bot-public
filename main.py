@@ -259,7 +259,8 @@ def mainstarter():
                 if 'output' in locals():
                     splitted_text = util.smart_split(output, chars_per_string=2000)
                     for text in splitted_text:
-                        bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🎈 Айди сообщения: {message.message_id}\n\n💲 Затрачено токенов: {total_tokens}\n\n🤔 Запрос: {inputuser}\n\n👾 Ответ от ChatGPT: {text}")
+                        bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🎈 Айди сообщения: {message.message_id}\n\n💰 Затрачено токенов: {total_tokens}\n\n🤔 Запрос: {inputuser}\n\n👾 Ответ от ChatGPT: {text}")
+
 
                 message_date = datetime.fromtimestamp(message.date, timezone(timebot))
                 message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
