@@ -1,6 +1,6 @@
 [![Youtube](https://user-images.githubusercontent.com/64781822/185656066-cdb875f1-ade6-4499-ae50-79a4f61fdc3e.png)](https://www.youtube.com/@hzfmain/) [![Telegram](https://user-images.githubusercontent.com/64781822/185657127-657c530b-3849-4931-ab91-63d6f0508330.png)](https://t.me/hzfnews) [![VK](https://user-images.githubusercontent.com/64781822/185657778-21a240e2-da1f-4b72-b37e-447c9adebfcb.png)](https://vk.com/hzforum1) [![Discord](https://user-images.githubusercontent.com/64781822/185659753-b997c6db-c91a-42c0-8876-6826d46568ba.png)](https://discord.com/invite/7bneGfUS5h)
 
-Бот, доступный в Telegram, представляет собой бесплатную реализацию двух инновационных технологий - ChatGPT и DALLE-2 - на базе библиотеки telebot и openai.
+Бот, доступный в Telegram, представляет собой бесплатную реализацию трех инновационных технологий - ChatGPT, DALLE-2 и Whisper - на базе библиотеки telebot и openai.
 
 Пользователь может взаимодействовать с ботом, используя команды /chatgpt и /dalle2. Команда /chatgpt позволяет пользователю использовать ChatGPT - глубокую нейронную сеть, способную генерировать тексты на основе образцов. Команда /dalle2 позволяет использовать DALLE-2 - модель глубокого обучения, которая может генерировать изображения на основе текстовых описаний.
 
