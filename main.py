@@ -151,7 +151,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ OpenAI API не смог обработать запрос: {e}", reply_markup=markup)
+                markdown = f"❌ *OpenAI API не смог обработать запрос*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.APIError as e:
                 print(e)
@@ -159,7 +160,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ OpenAI API вернул ошибку API: {e}", reply_markup=markup)
+                markdown = f"❌ *OpenAI API вернул ошибку API*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.APIConnectionError as e:
                 print(e)
@@ -167,7 +169,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ Невозможно подключиться к OpenAI API: {e}", reply_markup=markup)
+                markdown = f"❌ *Невозможно подключиться к OpenAI API*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.InvalidRequestError as e:
                 print(e)
@@ -175,7 +178,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ OpenAI API запрос оказался недействительным: {e}", reply_markup=markup)
+                markdown = f"❌ *OpenAI API запрос оказался недействительным*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.AuthenticationError as e:
                 print(e)
@@ -183,7 +187,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ OpenAI API запрос не был авторизован: {e}", reply_markup=markup)
+                markdown = f"❌ *OpenAI API запрос не был авторизован*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.PermissionError as e:
                 print(e)
@@ -191,7 +196,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ Запрос OpenAI API не был разрешен: {e}", reply_markup=markup)
+                markdown = f"❌ *Запрос OpenAI API не был разрешен*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.RateLimitError as e:
                 print(e)
@@ -199,7 +205,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ Превышены лимиты OpenAI API: {e}", reply_markup=markup)
+                markdown = f"❌ *Превышены лимиты OpenAI API*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             last_messages_dalletwo[message.chat.id] = time.time()
 
@@ -294,7 +301,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ OpenAI API не смог обработать запрос: {e}", reply_markup=markup)
+                markdown = f"❌ *OpenAI API не смог обработать запрос*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.APIError as e:
                 print(e)
@@ -302,7 +310,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ OpenAI API вернул ошибку API: {e}", reply_markup=markup)
+                markdown = f"❌ *OpenAI API вернул ошибку API*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.APIConnectionError as e:
                 print(e)
@@ -310,7 +319,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ Невозможно подключиться к OpenAI API: {e}", reply_markup=markup)
+                markdown = f"❌ *Невозможно подключиться к OpenAI API*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.InvalidRequestError as e:
                 print(e)
@@ -318,7 +328,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ OpenAI API запрос оказался недействительным: {e}", reply_markup=markup)
+                markdown = f"❌ *OpenAI API запрос оказался недействительным*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.AuthenticationError as e:
                 print(e)
@@ -326,7 +337,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ OpenAI API запрос не был авторизован: {e}", reply_markup=markup)
+                markdown = f"❌ *OpenAI API запрос не был авторизован*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.PermissionError as e:
                 print(e)
@@ -334,7 +346,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ Запрос OpenAI API не был разрешен: {e}", reply_markup=markup)
+                markdown = f"❌ *Запрос OpenAI API не был разрешен*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             except openai.error.RateLimitError as e:
                 print(e)
@@ -342,7 +355,8 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 markup.add(button1)
-                bot.reply_to(message, text=f"❌ Превышены лимиты OpenAI API: {e}", reply_markup=markup)
+                markdown = f"❌ *Превышены лимиты OpenAI API*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
             last_messages_chatgpt[message.chat.id] = time.time()
 
