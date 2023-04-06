@@ -20,6 +20,7 @@ bot = telebot.TeleBot(telegrambotapi)
 
 last_messages_chatgpt = {}
 last_messages_dalletwo = {}
+last_whisper = {}
 
 start_time = time.time()
 
@@ -63,7 +64,7 @@ def mainstarter():
         markup.add(button1, button2, button3, button4, button5, button6)
         sticker = open(f"{stickerstart}", "rb")
         bot.send_sticker(message.chat.id, sticker)
-        markdown = """Привет друг! 👋\n\nДанный телеграм бот основан на технологии ChatGPT и DALLE-2. 💻\n\nВы можете добавить данного бота к себе в чат и так же полноценно использовать, но учтите, что ограничения бота будут действовать на всех участников беседы сразу. 🤖\n\n*Что такое ChatGPT?* ❓\nChatGPT - это модель языкового обработки, разработанная OpenAI. Она была обучена на множестве текстов и может генерировать тексты, отвечать на вопросы и выполнять другие задачи обработки языка. 💡\n\n*Что такое DALLE-2?* ❓\nDALLE-2 - это продвинутая модель глубокого обучения, созданная OpenAI, которая может генерировать изображения и текстовые описания на основе заданного текстового ввода. 💡\n\n*Что такое Whisper?* ❓\nWhisper - это модель, которая позволяет переводить голосовое сообщение в текст.\n\n*Как задать вопрос ChatGPT?* ❓\nЛегко! Просто напиши /chatgpt ВАШ-ЗАПРОС 😉\n\n*Как получить картинку от DALLE-2?* ❓\nЛегко! Просто напиши /dalle2 ВАШ-ЗАПРОС 😉\n\n*Как воспользоваться Whisper?* ❓\nЛегко! Просто отправь или перешли голосовое сообщение боту 😉"""
+        markdown = """Привет друг! 👋\n\nДанный телеграм бот основан на технологии ChatGPT, DALLE-2 и Whisper. 💻\n\nВы можете добавить данного бота к себе в чат и так же полноценно использовать, но учтите, что ограничения бота будут действовать на всех участников беседы сразу. 🤖\n\n*Что такое ChatGPT?* ❓\nChatGPT - это модель языкового обработки, разработанная OpenAI. Она была обучена на множестве текстов и может генерировать тексты, отвечать на вопросы и выполнять другие задачи обработки языка. 💡\n\n*Что такое DALLE-2?* ❓\nDALLE-2 - это продвинутая модель глубокого обучения, созданная OpenAI, которая может генерировать изображения и текстовые описания на основе заданного текстового ввода. 💡\n\n*Что такое Whisper?* ❓\nWhisper - это модель, которая позволяет переводить голосовое сообщение в текст.\n\n*Как задать вопрос ChatGPT?* ❓\nЛегко! Просто напиши /chatgpt ВАШ-ЗАПРОС 😉\n\n*Как получить картинку от DALLE-2?* ❓\nЛегко! Просто напиши /dalle2 ВАШ-ЗАПРОС 😉\n\n*Как воспользоваться Whisper?* ❓\nЛегко! Просто отправь или перешли голосовое сообщение боту 😉"""
         bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
 
     @bot.message_handler(commands=['dalle2'])
@@ -116,7 +117,7 @@ def mainstarter():
                 output = response['data'][0]['url']
                 inputuser = message.text.split(maxsplit=1)[1]
                 bot.delete_message(message.chat.id, msg.message_id)
-                msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
+                bot.reply_to(message, text="✅ Ответ получен!")
 
 
                 bot.send_message(message.chat.id, text=f"👨 *Запрос отправлен пользователем*: `{username}`\n\n🎈 *Айди сообщения*: `{message.message_id}`\n\n🤔 *Запрос*: `{inputuser}`\n\n👾 *Ответ от DALLE-2*: [картинка от DALLE-2]({output})", parse_mode="Markdown")
@@ -263,7 +264,7 @@ def mainstarter():
                 username = message.from_user.first_name
                 inputuser = message.text.split(maxsplit=1)[1]
                 bot.delete_message(message.chat.id, msg.message_id)
-                msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
+                bot.reply_to(message, text="✅ Ответ получен!")
 
 
                 if 'output' in locals():
@@ -363,6 +364,169 @@ def mainstarter():
 
             last_messages_chatgpt[message.chat.id] = time.time()
 
+    @bot.message_handler(content_types=['voice'])
+    def save_voice(message):
+        if message.chat.type == 'private':
+            if message.chat.id in last_whisper and time.time() - last_whisper[message.chat.id] < 30:
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
+                markup.add(button1)
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            else: 
+                
+                if message.voice.file_id in last_whisper:
+                    elapsed_time = time.time() - last_whisper[message.voice.file_id]
+                    if elapsed_time < 30:
+                        time.sleep(30 - elapsed_time)
+
+                msg = bot.reply_to(message, "🔎 Идет загрузка, подождите...")
+
+                file_info = bot.get_file(message.voice.file_id)
+                file_path = file_info.file_path
+
+                downloaded_file = bot.download_file(file_path)
+
+                try:
+                    os.mkdir("voices")
+                except:
+                    pass
+
+                file_name = 'voice{}.ogg'.format(message.message_id)
+                file_path = os.path.join('voices', file_name)
+
+                with open(file_path, 'wb') as f:
+                    f.write(downloaded_file)
+                    f.close()
+
+                try:
+                    sound = pydub.AudioSegment.from_file(f"voices/voice{message.message_id}.ogg", format="ogg")
+                    sound.export(f"voices/voice{message.message_id}.mp3", format="mp3")
+
+                    try:
+                        os.remove("voices/voicelove.mp3")
+                    except:
+                        pass
+
+                    one = f"voices/voice{message.message_id}.mp3"
+                    two = "voices/voicelove.mp3"
+                    shutil.copyfile(one, two)
+                    fileaudio = open("voices/voicelove.mp3", "rb")
+                    response = openai.Audio.transcribe("whisper-1", fileaudio)
+
+                    username = message.from_user.first_name
+                    bot.delete_message(message.chat.id, msg.message_id)
+                    bot.reply_to(message, text="✅ Ответ получен!")
+                    sendmsg = response["text"]
+
+
+                    if 'sendmsg' in locals():
+                        splitted_text = util.smart_split(sendmsg, chars_per_string=2000)
+                        for text in splitted_text:
+                                bot.send_message(message.chat.id, text=f"👨 *Запрос отправлен пользователем*: `{username}`\n\n🎈 *Айди сообщения*: `{message.message_id}`\n\n👾 *Ответ от Whisper*: {text}", parse_mode="Markdown")
+
+
+                    message_date = datetime.fromtimestamp(message.date, timezone(timebot))
+                    message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
+
+                    f = open("chatlog.txt", "a")
+                    f.writelines('---------------------------------------------------------------------------')
+                    f.writelines('\n')
+                    f.writelines(f'Model: Whisper')
+                    f.writelines('\n')
+                    f.writelines(f'ChatID: {message.chat.id}')
+                    f.writelines('\n')
+                    f.writelines(f'MessageID: {message.message_id}')
+                    f.writelines('\n')
+                    f.writelines(f'UserID: {message.from_user.id}')
+                    f.writelines('\n')
+                    f.writelines(f'Username: {message.from_user.username}')
+                    f.writelines('\n')
+                    f.writelines(f'Date: {message_date_string}')
+                    f.writelines('\n')
+                    f.writelines(f'AI reply: {sendmsg}')
+                    f.writelines('\n')
+                    f.writelines('---------------------------------------------------------------------------')
+                    f.writelines('\n\n')
+                    f.close
+
+                    shutil.rmtree("voices")
+
+                except openai.error.Timeout as e:
+                    shutil.rmtree("voices")
+                    print(e)
+                    bot.delete_message(message.chat.id, msg.message_id)
+                    markup = types.InlineKeyboardMarkup()
+                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                    markup.add(button1)
+                    markdown = f"❌ *OpenAI API не смог обработать запрос*: `{e}`"
+                    bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+
+                except openai.error.APIError as e:
+                    shutil.rmtree("voices")
+                    print(e)
+                    bot.delete_message(message.chat.id, msg.message_id)
+                    markup = types.InlineKeyboardMarkup()
+                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                    markup.add(button1)
+                    markdown = f"❌ *OpenAI API вернул ошибку API*: `{e}`"
+                    bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+
+                except openai.error.APIConnectionError as e:
+                    shutil.rmtree("voices")
+                    print(e)
+                    bot.delete_message(message.chat.id, msg.message_id)
+                    markup = types.InlineKeyboardMarkup()
+                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                    markup.add(button1)
+                    markdown = f"❌ *Невозможно подключиться к OpenAI API*: `{e}`"
+                    bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+
+                except openai.error.InvalidRequestError as e:
+                    shutil.rmtree("voices")
+                    print(e)
+                    bot.delete_message(message.chat.id, msg.message_id)
+                    markup = types.InlineKeyboardMarkup()
+                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                    markup.add(button1)
+                    markdown = f"❌ *OpenAI API запрос оказался недействительным*: `{e}`"
+                    bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+
+                except openai.error.AuthenticationError as e:
+                    shutil.rmtree("voices")
+                    print(e)
+                    bot.delete_message(message.chat.id, msg.message_id)
+                    markup = types.InlineKeyboardMarkup()
+                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                    markup.add(button1)
+                    markdown = f"❌ *OpenAI API запрос не был авторизован*: `{e}`"
+                    bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+
+                except openai.error.PermissionError as e:
+                    shutil.rmtree("voices")
+                    print(e)
+                    bot.delete_message(message.chat.id, msg.message_id)
+                    markup = types.InlineKeyboardMarkup()
+                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                    markup.add(button1)
+                    markdown = f"❌ *Запрос OpenAI API не был разрешен*: `{e}`"
+                    bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+
+                except openai.error.RateLimitError as e:
+                    shutil.rmtree("voices")
+                    print(e)
+                    bot.delete_message(message.chat.id, msg.message_id)
+                    markup = types.InlineKeyboardMarkup()
+                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                    markup.add(button1)
+                    markdown = f"❌ *Превышены лимиты OpenAI API*: `{e}`"
+                    bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+
+                last_whisper[message.chat.id] = time.time()
+
+        elif message.chat.type in ['group', 'supergroup']:
+            pass
+
     @bot.message_handler(content_types=['text'])
     def send_text(message):
         if message.chat.type != 'private':
@@ -421,7 +585,7 @@ def mainstarter():
 *Время на сервере*: `%H:%M:%S` ⏰
 *Дата на сервере*: `%d.%m.%y` 📅
 
-*Система (платформа) на сервере*: `{platform}` 💻
+*Платформа на сервере*: `{platform}` 💻
 *Аптайм бота*: `{uptime_str}` ⌛""")
             bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
 
@@ -466,124 +630,6 @@ def mainstarter():
 Спасибо за ваше понимание! 🙏"""
             markup.add(button1)
             bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
-    @bot.message_handler(content_types=['voice'])
-    def save_voice(message):
-        if message.chat.type == 'private':
-            msg = bot.reply_to(message, "🔎 Идет загрузка, подождите...")
-
-            file_info = bot.get_file(message.voice.file_id)
-            file_path = file_info.file_path
-
-            downloaded_file = bot.download_file(file_path)
-
-            try:
-                os.mkdir("voices")
-            except:
-                pass
-
-            file_name = 'voice{}.ogg'.format(message.message_id)
-            file_path = os.path.join('voices', file_name)
-
-            with open(file_path, 'wb') as f:
-                f.write(downloaded_file)
-                f.close()
-
-            try:
-                sound = pydub.AudioSegment.from_file(f"voices/voice{message.message_id}.ogg", format="ogg")
-                sound.export(f"voices/voice{message.message_id}.mp3", format="mp3")
-
-                try:
-                    os.remove("voices/voicelove.mp3")
-                except:
-                    pass
-
-                one = f"voices/voice{message.message_id}.mp3"
-                two = "voices/voicelove.mp3"
-                shutil.copyfile(one, two)
-                fileaudio = open(f"voices/voicelove.mp3", "rb")
-                response = openai.Audio.transcribe("whisper-1", fileaudio)
-
-                username = message.from_user.first_name
-                bot.delete_message(message.chat.id, msg.message_id)
-                msgtwo = bot.reply_to(message, text="✅ Ответ получен!")
-                sendmsg = response["text"]
-                markdown = f"👨 *Запрос отправлен пользователем*: `{username}`\n\n🎈 *Айди сообщения*: `{message.message_id}`\n\n👾 *Ответ от Whisper*: {sendmsg}"
-
-                bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
-                shutil.rmtree("voices")
-
-            except openai.error.Timeout as e:
-                shutil.rmtree("voices")
-                print(e)
-                bot.delete_message(message.chat.id, msg.message_id)
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                markup.add(button1)
-                markdown = f"❌ *OpenAI API не смог обработать запрос*: `{e}`"
-                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
-            except openai.error.APIError as e:
-                shutil.rmtree("voices")
-                print(e)
-                bot.delete_message(message.chat.id, msg.message_id)
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                markup.add(button1)
-                markdown = f"❌ *OpenAI API вернул ошибку API*: `{e}`"
-                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
-            except openai.error.APIConnectionError as e:
-                shutil.rmtree("voices")
-                print(e)
-                bot.delete_message(message.chat.id, msg.message_id)
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                markup.add(button1)
-                markdown = f"❌ *Невозможно подключиться к OpenAI API*: `{e}`"
-                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
-            except openai.error.InvalidRequestError as e:
-                shutil.rmtree("voices")
-                print(e)
-                bot.delete_message(message.chat.id, msg.message_id)
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                markup.add(button1)
-                markdown = f"❌ *OpenAI API запрос оказался недействительным*: `{e}`"
-                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
-            except openai.error.AuthenticationError as e:
-                shutil.rmtree("voices")
-                print(e)
-                bot.delete_message(message.chat.id, msg.message_id)
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                markup.add(button1)
-                markdown = f"❌ *OpenAI API запрос не был авторизован*: `{e}`"
-                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
-            except openai.error.PermissionError as e:
-                shutil.rmtree("voices")
-                print(e)
-                bot.delete_message(message.chat.id, msg.message_id)
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                markup.add(button1)
-                markdown = f"❌ *Запрос OpenAI API не был разрешен*: `{e}`"
-                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
-            except openai.error.RateLimitError as e:
-                shutil.rmtree("voices")
-                print(e)
-                bot.delete_message(message.chat.id, msg.message_id)
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                markup.add(button1)
-                markdown = f"❌ *Превышены лимиты OpenAI API*: `{e}`"
-                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-        elif message.chat.type in ['group', 'supergroup']:
-            pass
 
     @bot.callback_query_handler(func=lambda call: call.data == "dellthiserror")
     def dellthiserror(call):
