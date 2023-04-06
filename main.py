@@ -591,7 +591,7 @@ def mainstarter():
 
         elif message.text.lower() == "исходный код":
             markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("GitHub Page", url="https://github.com/AvenCores/chatgpt-telegram-bot-public")
+            button1 = types.InlineKeyboardButton("GitHub Page", url="https://github.com/AvenCores/openai-api-telegram-bot-public")
             button2 = types.InlineKeyboardButton("Full GNU GPL V3", url="https://www.gnu.org/licenses/quick-guide-gplv3.ru.html")
             markdown = """⚠️ *Предупреждение* ⚠️
 
