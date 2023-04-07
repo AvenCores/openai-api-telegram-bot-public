@@ -413,6 +413,7 @@ def mainstarter():
                     shutil.copyfile(one, two)
                     fileaudio = open("voices/voicelove.mp3", "rb")
                     response = openai.Audio.transcribe("whisper-1", fileaudio)
+                    fileaudio.close()
 
                     username = message.from_user.first_name
                     bot.delete_message(message.chat.id, msg.message_id)
