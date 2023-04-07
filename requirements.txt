@@ -1,4 +1,5 @@
 pyTelegramBotAPI
+requests
 openai
-pytz
 pydub
+pytz
