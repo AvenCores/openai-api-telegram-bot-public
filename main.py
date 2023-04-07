@@ -281,6 +281,8 @@ def mainstarter():
                 f.writelines('\n')
                 f.writelines('Model: ChatGPT')
                 f.writelines('\n')
+                f.writelines(f'Tokens used: {total_tokens}')
+                f.writelines('\n')
                 f.writelines(f'ChatID: {message.chat.id}')
                 f.writelines('\n')
                 f.writelines(f'MessageID: {message.message_id}')
