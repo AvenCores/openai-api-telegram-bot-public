@@ -6,6 +6,7 @@ from pytz import timezone
 from telebot import types
 from telebot import util
 from sys import platform
+import requests
 import telebot
 import openai
 import shutil
@@ -13,7 +14,7 @@ import pydub
 import time
 import os
 
-from botapiconfig import openaiapi, telegrambotapi
+from botapiconfig import openaiapi, telegrambotapi, session_key
 
 openai.api_key = openaiapi
 bot = telebot.TeleBot(telegrambotapi)
@@ -581,12 +582,28 @@ def mainstarter():
             bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
 
         elif message.text.lower() == "статус бота":
+            url = "https://api.openai.com/dashboard/billing/credit_grants"
+            headers = {
+                "Content-Type": "application/json",
+                f"Authorization": f"Bearer {session_key}"
+            }
+
+            response = requests.get(url, headers=headers)
+            data = response.json()
+            balance = data['total_used']
+            totalbalance = data['total_granted']
+            totalavailable = data['total_available']
+
             current_time = time.time()
             uptime = int(current_time - start_time)
             uptime_str = f"{uptime // (24 * 3600)} день(-ней), {uptime // 3600 % 24} час(-ов), {uptime // 60 % 60} минут(-а), {uptime % 60} секунд(-а)"
             markdown = datetime.now().strftime(f"""*Бот работает в штатном режиме.* 🤖\n
 *Время на сервере*: `%H:%M:%S` ⏰
 *Дата на сервере*: `%d.%m.%y` 📅
+
+*Общий баланс токена*: 💸{totalbalance}
+*Баланс токена*: 💸{balance}
+*Общая доступность баланса токена*: 💸{totalavailable}
 
 *Платформа на сервере*: `{platform}` 💻
 *Аптайм бота*: `{uptime_str}` ⌛""")
