@@ -25,8 +25,7 @@ last_whisper = {}
 
 start_time = time.time()
 
-# botname = "avencoreschatgpt_bot"
-botname = "rereyyeryey_bot"
+botname = "avencoreschatgpt_bot"
 
 timebot = "Europe/Moscow"
 
