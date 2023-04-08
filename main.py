@@ -784,6 +784,7 @@ def mainstarter():
     @bot.callback_query_handler(func=lambda call: call.data == "yesdownload")
     def yesdwnl(call):
         try:
+            bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
             bot.answer_callback_query(callback_query_id=call.id, text="Лог был отправлен")
             with open('chatlog.txt', 'rb') as log_file:
                 bot.send_document(chat_id=call.message.chat.id, document=log_file, caption="📃 Это все логи, которые бот успел собрать на момент отправки.")
