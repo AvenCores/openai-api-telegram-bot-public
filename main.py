@@ -25,7 +25,8 @@ last_whisper = {}
 
 start_time = time.time()
 
-botname = "avencoreschatgpt_bot"
+# botname = "avencoreschatgpt_bot"
+botname = "rereyyeryey_bot"
 
 timebot = "Europe/Moscow"
 
@@ -776,13 +777,13 @@ def mainstarter():
         bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id - 1)
 
     @bot.callback_query_handler(func=lambda call: call.data == "delerrorandmsguserbot")
-    def delerrorandmsguser(call):
+    def delerrorandmsguserbot(call):
         bot.answer_callback_query(callback_query_id=call.id, text="Уведомление скрыто")
         bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
         bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id - 2)
 
     @bot.callback_query_handler(func=lambda call: call.data == "yesdownload")
-    def yesdwnl(call):
+    def yesdownload(call):
         try:
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
             bot.answer_callback_query(callback_query_id=call.id, text="Лог был отправлен")
