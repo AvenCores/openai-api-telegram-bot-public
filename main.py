@@ -420,13 +420,14 @@ def mainstarter():
     def logsend(message):
         if message.chat.type == 'private':
             if str(message.chat.id) in adminsid:
-                try:
-                    with open('chatlog.txt', 'rb') as log_file:
-                        bot.send_document(message.chat.id, log_file, caption="📃 Это все логи, которые бот успел собрать на момент отправки.")
-                        log_file.close()
-                        os.remove("chatlog.txt")
-                except Exception as e:
-                    print(e)
+                if os.path.isfile("chatlog.txt"):
+                    markup = types.InlineKeyboardMarkup()
+                    button1 = types.InlineKeyboardButton("✅ Да, отправь мне лог!", callback_data="yesdownload")
+                    button2 = types.InlineKeyboardButton("❌ Нет, я передумал!", callback_data="delerrorandmsguser")
+                    markup.add(button1)
+                    markup.add(button2)
+                    bot.send_message(message.chat.id, text="🤔 *Вы уверены, что хотите скачать логи?*", reply_markup=markup, parse_mode="Markdown")
+                else:
                     markup = types.InlineKeyboardMarkup()
                     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                     button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
@@ -773,6 +774,30 @@ def mainstarter():
         bot.answer_callback_query(callback_query_id=call.id, text="Уведомление скрыто")
         bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
         bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id - 1)
+
+    @bot.callback_query_handler(func=lambda call: call.data == "delerrorandmsguserbot")
+    def delerrorandmsguser(call):
+        bot.answer_callback_query(callback_query_id=call.id, text="Уведомление скрыто")
+        bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+        bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id - 2)
+
+    @bot.callback_query_handler(func=lambda call: call.data == "yesdownload")
+    def yesdwnl(call):
+        try:
+            bot.answer_callback_query(callback_query_id=call.id, text="Лог был отправлен")
+            with open('chatlog.txt', 'rb') as log_file:
+                bot.send_document(chat_id=call.message.chat.id, document=log_file, caption="📃 Это все логи, которые бот успел собрать на момент отправки.")
+                log_file.close()
+            os.remove("chatlog.txt")
+        except Exception as e:
+            print(e)
+            bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguserbot")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(chat_id=call.message.chat.id, text=f"❌ *Файл логов оказался пустым, что привело к ошибке*: {e}", reply_markup=markup, parse_mode="Markdown")
 
     bot.polling(none_stop=True)
 
