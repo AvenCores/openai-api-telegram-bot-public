@@ -505,6 +505,7 @@ def mainstarter():
                     shutil.rmtree("voices")
 
                 except openai.error.Timeout as e:
+                    shutil.rmtree("voices")
                     print(e)
                     bot.delete_message(message.chat.id, msg.message_id)
                     markup = types.InlineKeyboardMarkup()
@@ -516,6 +517,7 @@ def mainstarter():
                     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
                 except openai.error.APIError as e:
+                    shutil.rmtree("voices")
                     print(e)
                     bot.delete_message(message.chat.id, msg.message_id)
                     markup = types.InlineKeyboardMarkup()
@@ -527,6 +529,7 @@ def mainstarter():
                     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
                 except openai.error.APIConnectionError as e:
+                    shutil.rmtree("voices")
                     print(e)
                     bot.delete_message(message.chat.id, msg.message_id)
                     markup = types.InlineKeyboardMarkup()
@@ -538,6 +541,7 @@ def mainstarter():
                     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
                 except openai.error.InvalidRequestError as e:
+                    shutil.rmtree("voices")
                     print(e)
                     bot.delete_message(message.chat.id, msg.message_id)
                     markup = types.InlineKeyboardMarkup()
@@ -549,6 +553,7 @@ def mainstarter():
                     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
                 except openai.error.AuthenticationError as e:
+                    shutil.rmtree("voices")
                     print(e)
                     bot.delete_message(message.chat.id, msg.message_id)
                     markup = types.InlineKeyboardMarkup()
@@ -560,6 +565,7 @@ def mainstarter():
                     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
                 except openai.error.PermissionError as e:
+                    shutil.rmtree("voices")
                     print(e)
                     bot.delete_message(message.chat.id, msg.message_id)
                     markup = types.InlineKeyboardMarkup()
@@ -571,6 +577,7 @@ def mainstarter():
                     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
                 except openai.error.RateLimitError as e:
+                    shutil.rmtree("voices")
                     print(e)
                     bot.delete_message(message.chat.id, msg.message_id)
                     markup = types.InlineKeyboardMarkup()
