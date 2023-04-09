@@ -31,7 +31,7 @@ timebot = "Europe/Moscow"
 
 stickerstart = "sticker-animenazi.webp"
 
-adminsid = ['872108002']
+adminsid = ['872108002', '1087968824']
 
 def mainstarter():
     @bot.message_handler(commands=['start'])
@@ -153,7 +153,7 @@ def mainstarter():
                 f.writelines('\n')
                 f.writelines(f'Username: {message.from_user.username}')
                 f.writelines('\n')
-                f.writelines(f'Date: {message_date_string}')
+                f.writelines(f'Date and Time: {message_date_string}')
                 f.writelines('\n')
                 f.writelines(f'Prompt: {message.text.split(maxsplit=1)[1]}')
                 f.writelines('\n')
@@ -327,7 +327,7 @@ def mainstarter():
                 f.writelines('\n')
                 f.writelines(f'Username: {message.from_user.username}')
                 f.writelines('\n')
-                f.writelines(f'Date: {message_date_string}')
+                f.writelines(f'Date and Time: {message_date_string}')
                 f.writelines('\n')
                 f.writelines(f'Prompt: {message.text.split(maxsplit=1)[1]}')
                 f.writelines('\n')
@@ -419,7 +419,7 @@ def mainstarter():
     @bot.message_handler(commands=['log'])
     def logsend(message):
         if message.chat.type == 'private':
-            if str(message.chat.id) in adminsid:
+            if str(message.from_user.id) in adminsid:
                 if os.path.isfile("chatlog.txt"):
                     markup = types.InlineKeyboardMarkup()
                     button1 = types.InlineKeyboardButton("✅ Да, отправь мне лог!", callback_data="yesdownload")
@@ -441,7 +441,7 @@ def mainstarter():
                 markup.add(button1)
                 markup.add(button2)
                 bot.send_message(message.chat.id, text="❌ *Данная команда доступна только администрации!*", reply_markup=markup, parse_mode="Markdown")
-        else:
+        elif message.chat.type in ['group', 'supergroup']:
             if message.text.lower() == "/log":
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
@@ -463,6 +463,26 @@ def mainstarter():
                 markup.add(button1)
                 markup.add(button2)
                 bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['id'])
+    def logsend(message):
+        message_date = datetime.fromtimestamp(message.date, timezone(timebot))
+        message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
+        if message.chat.type == 'private':
+            if str(message.from_user.id) in adminsid:
+                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди чата*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администрацией*: `Да`"
+                bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
+            else:
+                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди чата*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администрацией*: `Да`"
+                bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
+        elif message.chat.type in ['group', 'supergroup']:
+            if str(message.from_user.id) in adminsid:
+                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди беседы*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администрацией*: `Да`"
+                bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
+            else:
+                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди беседы*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администрацией*: `Да`"
+                bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
+
 
     @bot.message_handler(content_types=['voice'])
     def save_voice(message):
@@ -543,7 +563,7 @@ def mainstarter():
                     f.writelines('\n')
                     f.writelines(f'Username: {message.from_user.username}')
                     f.writelines('\n')
-                    f.writelines(f'Date: {message_date_string}')
+                    f.writelines(f'Date and Time: {message_date_string}')
                     f.writelines('\n')
                     f.writelines(f'AI reply: {sendmsg}')
                     f.writelines('\n')
