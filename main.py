@@ -12,6 +12,7 @@ import openai
 import shutil
 import pydub
 import time
+import sys
 import os
 
 from botapiconfig import openaiapi, telegrambotapi, session_key
@@ -725,6 +726,7 @@ def mainstarter():
             totalbalance = data['total_granted']
             totalavailable = data['total_available']
 
+            pyver = sys.version.split()[0]
             current_time = time.time()
             uptime = int(current_time - start_time)
             uptime_str = f"{uptime // (24 * 3600)} день(-ней), {uptime // 3600 % 24} час(-ов), {uptime // 60 % 60} минут(-а), {uptime % 60} секунд(-а)"
@@ -737,6 +739,7 @@ def mainstarter():
 *Осталось денег на балансе токена*: 💸`{totalavailable}`
 
 *Платформа на сервере*: `{platform}` 💻
+*Версия Python на сервере*: `{pyver}` 🐍
 *Аптайм бота*: `{uptime_str}` ⌛""")
             bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
 
