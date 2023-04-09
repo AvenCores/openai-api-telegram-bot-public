@@ -470,17 +470,17 @@ def mainstarter():
         message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
         if message.chat.type == 'private':
             if str(message.from_user.id) in adminsid:
-                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди чата*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администрацией*: `Да`"
+                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди чата*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администратором*: `Да`"
                 bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
             else:
-                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди чата*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администрацией*: `Да`"
+                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди чата*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администратором*: `Да`"
                 bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
         elif message.chat.type in ['group', 'supergroup']:
             if str(message.from_user.id) in adminsid:
-                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди беседы*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администрацией*: `Да`"
+                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди беседы*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администратором*: `Да`"
                 bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
             else:
-                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди беседы*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администрацией*: `Да`"
+                markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди беседы*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администратором*: `Да`"
                 bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
 
 
