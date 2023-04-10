@@ -33,8 +33,8 @@ timebot = "Europe/Moscow"
 
 adminsid = ['872108002', '1087968824']
 
-q,w,e,r,t,y,u,i,o,p  = ['dhfdhdfhf.webp', 'fgjgfjfgj.webp', 'fhfdhfdh.webp', 'fjfgjurturt.webp', 'hdfhdfhdfh.webp', 'rtutrurtutru.webp', 'sticker.webp', 'sticker-animenazi.webp', 'trutrutrur.webp', 'urturturtutru.webp', 'rutrutrutrurt.webp', 'jfjfgjfgjg.webp', 'fjgfjfgjgfj.webp', 'jfgjturtur.webp', 'rtutrurtjfgj.webp', 'urturutrurt.webp']
-numbers = (q,w,e,r,t,y,u,i,o,p)
+q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h  = ['dhfdhdfhf.webp', 'fgjgfjfgj.webp', 'fhfdhfdh.webp', 'fjfgjurturt.webp', 'hdfhdfhdfh.webp', 'rtutrurtutru.webp', 'sticker.webp', 'sticker-animenazi.webp', 'trutrutrur.webp', 'urturturtutru.webp', 'rutrutrutrurt.webp', 'jfjfgjfgjg.webp', 'fjgfjfgjgfj.webp', 'jfgjturtur.webp', 'rtutrurtjfgj.webp', 'urturutrurt.webp']
+numbers = (q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h)
 
 def mainstarter():
     @bot.message_handler(commands=['start'])
