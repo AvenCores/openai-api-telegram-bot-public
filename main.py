@@ -31,8 +31,6 @@ botname = "avencoreschatgpt_bot"
 
 timebot = "Europe/Moscow"
 
-stickerstart = "stickers/hjkhjkhjkuiy.gif"
-
 adminsid = ['872108002', '1087968824']
 
 q,w,e,r,t,y,u,i,o,p  = ['dhfdhdfhf.webp', 'fgjgfjfgj.webp', 'fhfdhfdh.webp', 'fjfgjurturt.webp', 'hdfhdfhdfh.webp', 'rtutrurtutru.webp', 'sticker.webp', 'sticker-animenazi.webp', 'trutrutrur.webp', 'urturturtutru.webp', 'rutrutrutrurt.webp', 'jfjfgjfgjg.webp', 'fjgfjfgjgfj.webp', 'jfgjturtur.webp', 'rtutrurtjfgj.webp', 'urturutrurt.webp']
