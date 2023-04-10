@@ -8,6 +8,7 @@ from telebot import util
 from sys import platform
 import requests
 import telebot
+import random
 import openai
 import shutil
 import pydub
@@ -30,9 +31,12 @@ botname = "avencoreschatgpt_bot"
 
 timebot = "Europe/Moscow"
 
-stickerstart = "sticker-animenazi.webp"
+stickerstart = "stickers/hjkhjkhjkuiy.gif"
 
 adminsid = ['872108002', '1087968824']
+
+q,w,e,r,t,y,u,i,o,p  = ['dhfdhdfhf.webp', 'fgjgfjfgj.webp', 'fhfdhfdh.webp', 'fjfgjurturt.webp', 'hdfhdfhdfh.webp', 'rtutrurtutru.webp', 'sticker.webp', 'sticker-animenazi.webp', 'trutrutrur.webp', 'urturturtutru.webp', 'rutrutrutrurt.webp', 'jfjfgjfgjg.webp', 'fjgfjfgjgfj.webp', 'jfgjturtur.webp', 'rtutrurtjfgj.webp', 'urturutrurt.webp']
+numbers = (q,w,e,r,t,y,u,i,o,p)
 
 def mainstarter():
     @bot.message_handler(commands=['start'])
@@ -69,7 +73,8 @@ def mainstarter():
         button5 = types.InlineKeyboardButton("Исходный код")
         button6 = types.InlineKeyboardButton("Статус бота")
         markup.add(button1, button2, button3, button4, button5, button6)
-        sticker = open(f"{stickerstart}", "rb")
+        random_number = random.choice(numbers)
+        sticker = open(f"stickers/{random_number}", "rb")
         bot.send_sticker(message.chat.id, sticker)
         markdown = """Привет друг! 👋\n\nДанный телеграм бот основан на технологии ChatGPT, DALLE-2 и Whisper. 💻\n\nВы можете добавить данного бота к себе в чат и так же полноценно использовать, но учтите, что ограничения бота будут действовать на всех участников беседы сразу. 🤖\n\n*Что такое ChatGPT?* ❓\nChatGPT - это модель языкового обработки, разработанная OpenAI. Она была обучена на множестве текстов и может генерировать тексты, отвечать на вопросы и выполнять другие задачи обработки языка. 💡\n\n*Что такое DALLE-2?* ❓\nDALLE-2 - это продвинутая модель глубокого обучения, созданная OpenAI, которая может генерировать изображения и текстовые описания на основе заданного текстового ввода. 💡\n\n*Что такое Whisper?* ❓\nWhisper - это модель, которая позволяет переводить голосовое сообщение в текст.\n\n*Как задать вопрос ChatGPT?* ❓\nЛегко! Просто напиши /chatgpt ВАШ-ЗАПРОС 😉\n\n*Как получить картинку от DALLE-2?* ❓\nЛегко! Просто напиши /dalle2 ВАШ-ЗАПРОС 😉\n\n*Как воспользоваться Whisper?* ❓\nЛегко! Просто отправь или перешли голосовое сообщение боту 😉"""
         bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
@@ -491,8 +496,9 @@ def mainstarter():
             if message.chat.id in last_whisper and time.time() - last_whisper[message.chat.id] < 30:
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
                 markup.add(button1)
+                markup.add(button2)
                 bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
             else: 
                 
