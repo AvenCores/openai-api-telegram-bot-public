@@ -495,6 +495,7 @@ def mainstarter():
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
                 markup.add(button1)
                 markup.add(button2)
                 bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
