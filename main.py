@@ -124,6 +124,8 @@ def mainstarter():
 
             msg = bot.reply_to(message, "🔎 Идет загрузка, подождите...")
 
+            last_messages_dalletwo[message.chat.id] = time.time()
+
             try:
                 response = openai.Image.create(
                     prompt=message.text,
@@ -244,7 +246,6 @@ def mainstarter():
                 markdown = f"❌ *Превышены лимиты OpenAI API*: `{e}`"
                 bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
-            last_messages_dalletwo[message.chat.id] = time.time()
 
     @bot.message_handler(commands=['chatgpt'])
     def chatgpt(message):
@@ -292,6 +293,8 @@ def mainstarter():
                     time.sleep(30 - elapsed_time)
 
             msg = bot.reply_to(message, "🔎 Идет загрузка, подождите...")
+
+            last_messages_chatgpt[message.chat.id] = time.time()
 
             try:
                 response = openai.ChatCompletion.create(
@@ -417,8 +420,7 @@ def mainstarter():
                 markup.add(button2)
                 markdown = f"❌ *Превышены лимиты OpenAI API*: `{e}`"
                 bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
-            last_messages_chatgpt[message.chat.id] = time.time()
+                
 
     @bot.message_handler(commands=['log'])
     def logsend(message):
@@ -507,6 +509,8 @@ def mainstarter():
                         time.sleep(30 - elapsed_time)
 
                 msg = bot.reply_to(message, "🔎 Идет загрузка, подождите...")
+
+                last_whisper[message.chat.id] = time.time()
 
                 file_info = bot.get_file(message.voice.file_id)
                 file_path = file_info.file_path
@@ -663,7 +667,6 @@ def mainstarter():
                     markdown = f"❌ *Превышены лимиты OpenAI API*: `{e}`"
                     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
-                last_whisper[message.chat.id] = time.time()
 
         elif message.chat.type in ['group', 'supergroup']:
             pass
