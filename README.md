@@ -7,15 +7,13 @@
 Бот доступен как для личных сообщений, так и для групповых бесед. В личных сообщениях пользователь может использовать команды /chatgpt и /dalle2 для взаимодействия с ботом и получения результатов. В групповых беседах бот реагирует на сообщения, начинающиеся с команд /chatgpt или /dalle2, и генерирует соответствующие тексты или изображения в ответ.
 
 # 🧬 Установка
-+ **`sudo pacman -S git python-virtualenv ffmpeg`** or **`sudo apt install git python3.10-venv ffmpeg`**
-+ **`git clone https://github.com/AvenCores/chatgpt-telegram-bot-public`**
-+ **`cd chatgpt-telegram-bot-public`**
-+ **`chmod +X install.sh`**
-+ **`chmod +X start.sh`**
-+ **`sh install.sh`** or **`install.bat`**
++ **`sudo dnf install ffmpeg`** or **`sudo pacman -S git python-virtualenv ffmpeg`** or **`sudo apt install git python3.10-venv ffmpeg`**
++ **`git clone https://github.com/AvenCores/openai-api-telegram-bot-public`**
++ **`cd openai-api-telegram-bot-public`**
++ **`python3 install.py`** 
 
 # 🛡️ Запуск
-+ **`sh start.sh`** or **`start.bat`**
++ **`python3 start.py`**
 
 # 👾 Меню
 ![example](https://i.imgur.com/AvlADPa.png)
