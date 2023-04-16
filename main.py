@@ -64,12 +64,12 @@ def mainstarter():
             return
         
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        button1 = types.InlineKeyboardButton("Мои проекты")
-        button2 = types.InlineKeyboardButton("Мои чаты")
-        button3 = types.InlineKeyboardButton("Поддержать автора монетой")
-        button4 = types.InlineKeyboardButton("Техническая поддержка")
-        button5 = types.InlineKeyboardButton("Исходный код")
-        button6 = types.InlineKeyboardButton("Статус бота")
+        button1 = types.InlineKeyboardButton("🚀 Мои проекты")
+        button2 = types.InlineKeyboardButton("💬 Мои чаты")
+        button3 = types.InlineKeyboardButton("💰 Поддержать автора монетой")
+        button4 = types.InlineKeyboardButton("🔧 Техническая поддержка")
+        button5 = types.InlineKeyboardButton("📃 Исходный код")
+        button6 = types.InlineKeyboardButton("📈 Статус бота")
         markup.add(button1, button2, button3, button4, button5, button6)
         random_number = random.choice(numbers)
         sticker = open(f"stickers/{random_number}", "rb")
@@ -675,7 +675,7 @@ def mainstarter():
     def send_text(message):
         if message.chat.type != 'private':
             return
-        if message.text.lower() == "мои проекты":
+        if message.text.lower() == "🚀 мои проекты":
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("Группа VK", url="https://vk.com/chatgptcontent")
             button2 = types.InlineKeyboardButton("Telegram канал", url="https://t.me/hzfnews")
@@ -689,7 +689,7 @@ def mainstarter():
 Благодарим за использование нашего бота! 🙏"""
             bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
 
-        elif message.text.lower() == "поддержать автора монетой":
+        elif message.text.lower() == "💰 поддержать автора монетой":
             markdown = """ *Поддержать автора монетой 💰*
 
 Если вам нравится использовать этот бот и вы хотите поддержать наш проект, мы будем очень благодарны за любую помощь.
@@ -705,7 +705,7 @@ def mainstarter():
 Благодарим за использование нашего бота и за вашу поддержку! 🙏"""
             bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
 
-        elif message.text.lower() == "техническая поддержка":
+        elif message.text.lower() == "🔧 техническая поддержка":
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("Я в VK", url="https://vk.com/avencores")
             button2 = types.InlineKeyboardButton("Я в Telegram", url="https://t.me/avencores")
@@ -721,7 +721,7 @@ def mainstarter():
 Благодарим за использование нашего бота! 🙏"""
             bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
 
-        elif message.text.lower() == "статус бота":
+        elif message.text.lower() == "📈 статус бота":
             url = "https://api.openai.com/dashboard/billing/credit_grants"
             headers = {
                 "Content-Type": "application/json",
@@ -751,7 +751,7 @@ def mainstarter():
 *Аптайм бота*: `{uptime_str}` ⌛""")
             bot.send_message(message.chat.id, markdown, parse_mode="Markdown")
 
-        elif message.text.lower() == "исходный код":
+        elif message.text.lower() == "📃 исходный код":
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("GitHub Page", url="https://github.com/AvenCores/openai-api-telegram-bot-public")
             button2 = types.InlineKeyboardButton("Full GNU GPL V3", url="https://www.gnu.org/licenses/quick-guide-gplv3.ru.html")
@@ -765,7 +765,7 @@ def mainstarter():
             markup.add(button1, button2)
             bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
 
-        elif message.text.lower() == "мои чаты":
+        elif message.text.lower() == "💬 мои чаты":
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("Telegram Chat", url="https://t.me/+MDOUaUZzWlEwNjRi")
             button2 = types.InlineKeyboardButton("VK Chat", url="https://vk.me/join/VqYKejk4a/QQvIXq6DhW6huxyAJ/A7cCiD4=")
