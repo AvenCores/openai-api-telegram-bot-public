@@ -10,10 +10,10 @@
 + **`sudo dnf install ffmpeg`** or **`sudo pacman -S git python-virtualenv ffmpeg`** or **`sudo apt install git python3.10-venv ffmpeg`**
 + **`git clone https://github.com/AvenCores/openai-api-telegram-bot-public`**
 + **`cd openai-api-telegram-bot-public`**
-+ **`python3 install.py`** 
++ **`python3 venv-install.py`** or **`python3 native-install.py`**
 
 # 🛡️ Запуск
-+ **`python3 start.py`**
++ **`python3 venv-start.py`** or **`python3 native-start.py`**
 
 # 👾 Меню
 ![example](https://i.imgur.com/RdAdClt.png)
