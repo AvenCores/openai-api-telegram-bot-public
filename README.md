@@ -16,7 +16,7 @@
 + **`python3 start.py`**
 
 # 👾 Меню
-![example](https://i.imgur.com/AvlADPa.png)
+![example](https://i.imgur.com/RdAdClt.png)
 
 # 🖤 Пример работы
 ![example](https://i.imgur.com/vORaTRT.png)
