@@ -7,7 +7,7 @@ activate_script_linux = os.path.join("venv", "bin", "activate")
 
 if platform == "win32":
     subprocess.run(["python", "-m", "venv", "venv"])
-    subprocess.run([f"call", "{activate_script_windows}", "&&", "pip", "install", "-r", "requirements.txt"], shell=True)
+    subprocess.run([f"call", f"{activate_script_windows}", "&&", "pip", "install", "-r", "requirements.txt"], shell=True)
 
 if platform == "linux" or platform == "linux2" or platform == "unix":
     subprocess.run(["python3", "-m", "venv", "venv"])
