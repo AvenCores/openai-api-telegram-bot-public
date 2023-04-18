@@ -31,7 +31,7 @@ botname = "avencoreschatgpt_bot"
 
 timebot = "Europe/Moscow"
 
-adminsid = ['872108002', '1087968824']
+adminsid = ['872108002']
 
 q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h  = ['dhfdhdfhf.webp', 'fgjgfjfgj.webp', 'fhfdhfdh.webp', 'fjfgjurturt.webp', 'hdfhdfhdfh.webp', 'rtutrurtutru.webp', 'sticker.webp', 'sticker-animenazi.webp', 'trutrutrur.webp', 'urturturtutru.webp', 'rutrutrutrurt.webp', 'jfjfgjfgjg.webp', 'fjgfjfgjgfj.webp', 'jfgjturtur.webp', 'rtutrurtjfgj.webp', 'urturutrurt.webp']
 numbers = (q,w,e,r,t,y,u,i,o,p,a,s,d,f,g,h)
@@ -767,7 +767,7 @@ def mainstarter():
 
         elif message.text.lower() == "💬 мои чаты":
             markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Telegram Chat", url="https://t.me/+MDOUaUZzWlEwNjRi")
+            button1 = types.InlineKeyboardButton("Telegram Chat", url="http://t.me/+cUZbC1ujWr9kZDky")
             button2 = types.InlineKeyboardButton("VK Chat", url="https://vk.me/join/VqYKejk4a/QQvIXq6DhW6huxyAJ/A7cCiD4=")
             markdown = """📣 *Присоединяйтесь к нашему Telegram и VK чату!* 🚀
 
