@@ -816,7 +816,7 @@ def mainstarter():
     def yesdownload(call):
         try:
             bot.delete_message(chat_id=call.message.chat.id, message_id=call.message.message_id)
-            bot.answer_callback_query(callback_query_id=call.id, text="Лог был отправлен")
+            bot.answer_callback_query(callback_query_id=call.id, text="Логи были успешно отправлены")
             with open('chatlog.txt', 'rb') as log_file:
                 bot.send_document(chat_id=call.message.chat.id, document=log_file, caption="📃 Это все логи, которые бот успел собрать на момент отправки.")
                 log_file.close()
