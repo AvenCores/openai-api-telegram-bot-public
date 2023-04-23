@@ -1,5 +1,11 @@
 pyTelegramBotAPI
+websocket-client
+tls-client
+curl_cffi
 requests
+pypasser
 openai
+vk_api
 pydub
+names
 pytz
