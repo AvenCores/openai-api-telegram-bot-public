@@ -90,10 +90,10 @@ def ban_user(message):
         markup.add(button2)
         bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")
 
-@bot.message_handler(commands=['remoceadmin'])
+@bot.message_handler(commands=['removeadmin'])
 def unban_user(message):
     if len(admin_list) > 0 and str(message.from_user.id) in admin_list:
-        if message.text.lower() == "/remoceadmin":
+        if message.text.lower() == "/removeadmin":
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
@@ -102,7 +102,7 @@ def unban_user(message):
             bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
         user_id = message.text.split()[1]
         
-        if message.text.lower() == f"/remoceadmin@{botname}":
+        if message.text.lower() == f"/removeadmin@{botname}":
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
                 button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
