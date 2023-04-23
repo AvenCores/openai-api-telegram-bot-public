@@ -401,37 +401,37 @@ def mainstarter():
             last_messages_chatgpt3[message.chat.id] = time.time()
 
             try:
-                # response = openai.ChatCompletion.create(
-                #     model="gpt-3.5-turbo",
-                #     messages=[{"role": "user", "content": message.text}])
+                response = openai.ChatCompletion.create(
+                    model="gpt-3.5-turbo",
+                    messages=[{"role": "user", "content": message.text}])
 
-                # total_tokens = response['usage']['total_tokens']
-                # output = response["choices"][0]["message"]["content"]
-                # username = message.from_user.first_name
-                # inputuser = message.text.split(maxsplit=1)[1]
-                # bot.delete_message(message.chat.id, msg.message_id)
-                # bot.reply_to(message, text="✅ Ответ получен!")
-
-
-                # if 'output' in locals():
-                #     splitted_text = util.smart_split(output, chars_per_string=2000)
-                #     for text in splitted_text:
-                #         bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🎈 Айди сообщения: {message.message_id}\n\n💰 Затрачено токенов: {total_tokens}\n\n🤔 Запрос: {inputuser}\n\n👾 Ответ от ChatGPT3: {text}")
-
-                model = ora.CompletionModel.create(name = 'gpt-3.5')
-                prompt = message.text
-                response = ora.Completion.create(model = model, prompt = prompt)
-                output = response.completion.choices[0].text
-
+                total_tokens = response['usage']['total_tokens']
+                output = response["choices"][0]["message"]["content"]
                 username = message.from_user.first_name
                 inputuser = message.text.split(maxsplit=1)[1]
                 bot.delete_message(message.chat.id, msg.message_id)
                 bot.reply_to(message, text="✅ Ответ получен!")
 
+
                 if 'output' in locals():
                     splitted_text = util.smart_split(output, chars_per_string=2000)
                     for text in splitted_text:
-                        bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🎈 Айди сообщения: {message.message_id}\n\n💰 Затрачено токенов: FREE\n\n🤔 Запрос: {inputuser}\n\n👾 Ответ от ChatGPT3: {text}")
+                        bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🎈 Айди сообщения: {message.message_id}\n\n💰 Затрачено токенов: {total_tokens}\n\n🤔 Запрос: {inputuser}\n\n👾 Ответ от ChatGPT3: {text}")
+
+                # model = ora.CompletionModel.create(name = 'gpt-3.5')
+                # prompt = message.text
+                # response = ora.Completion.create(model = model, prompt = prompt)
+                # output = response.completion.choices[0].text
+
+                # username = message.from_user.first_name
+                # inputuser = message.text.split(maxsplit=1)[1]
+                # bot.delete_message(message.chat.id, msg.message_id)
+                # bot.reply_to(message, text="✅ Ответ получен!")
+
+                # if 'output' in locals():
+                #     splitted_text = util.smart_split(output, chars_per_string=2000)
+                #     for text in splitted_text:
+                #         bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🎈 Айди сообщения: {message.message_id}\n\n💰 Затрачено токенов: FREE\n\n🤔 Запрос: {inputuser}\n\n👾 Ответ от ChatGPT3: {text}")
 
                 message_date = datetime.fromtimestamp(message.date, timezone(timebot))
                 message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
@@ -441,8 +441,8 @@ def mainstarter():
                 f.writelines('\n')
                 f.writelines('Model: ChatGPT3')
                 f.writelines('\n')
-                # f.writelines(f'Tokens used: {total_tokens}')
-                f.writelines(f'Tokens used: FREE')
+                f.writelines(f'Tokens used: {total_tokens}')
+                # f.writelines(f'Tokens used: FREE')
                 f.writelines('\n')
                 f.writelines(f'ChatID: {message.chat.id}')
                 f.writelines('\n')
@@ -462,7 +462,18 @@ def mainstarter():
                 f.writelines('\n\n')
                 f.close
 
-            except Exception as e:
+            # except Exception as e:
+                # print(e)
+                # bot.delete_message(message.chat.id, msg.message_id)
+                # markup = types.InlineKeyboardMarkup()
+                # button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                # button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
+                # markup.add(button1)
+                # markup.add(button2)
+                # markdown = f"❌ *Ora API не смог обработать запрос*: `{e}`"
+                # bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+
+            except openai.error.Timeout as e:
                 print(e)
                 bot.delete_message(message.chat.id, msg.message_id)
                 markup = types.InlineKeyboardMarkup()
@@ -470,85 +481,74 @@ def mainstarter():
                 button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
                 markup.add(button1)
                 markup.add(button2)
-                markdown = f"❌ *Ora API не смог обработать запрос*: `{e}`"
+                markdown = f"❌ *OpenAI API не смог обработать запрос*: `{e}`"
                 bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
-            # except openai.error.Timeout as e:
-            #     print(e)
-            #     bot.delete_message(message.chat.id, msg.message_id)
-            #     markup = types.InlineKeyboardMarkup()
-            #     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            #     button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            #     markup.add(button1)
-            #     markup.add(button2)
-            #     markdown = f"❌ *OpenAI API не смог обработать запрос*: `{e}`"
-            #     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            except openai.error.APIError as e:
+                print(e)
+                bot.delete_message(message.chat.id, msg.message_id)
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                markdown = f"❌ *OpenAI API вернул ошибку API*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
-            # except openai.error.APIError as e:
-            #     print(e)
-            #     bot.delete_message(message.chat.id, msg.message_id)
-            #     markup = types.InlineKeyboardMarkup()
-            #     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            #     button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            #     markup.add(button1)
-            #     markup.add(button2)
-            #     markdown = f"❌ *OpenAI API вернул ошибку API*: `{e}`"
-            #     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            except openai.error.APIConnectionError as e:
+                print(e)
+                bot.delete_message(message.chat.id, msg.message_id)
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                markdown = f"❌ *Невозможно подключиться к OpenAI API*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
-            # except openai.error.APIConnectionError as e:
-            #     print(e)
-            #     bot.delete_message(message.chat.id, msg.message_id)
-            #     markup = types.InlineKeyboardMarkup()
-            #     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            #     button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            #     markup.add(button1)
-            #     markup.add(button2)
-            #     markdown = f"❌ *Невозможно подключиться к OpenAI API*: `{e}`"
-            #     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            except openai.error.InvalidRequestError as e:
+                print(e)
+                bot.delete_message(message.chat.id, msg.message_id)
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                markdown = f"❌ *OpenAI API запрос оказался недействительным*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
-            # except openai.error.InvalidRequestError as e:
-            #     print(e)
-            #     bot.delete_message(message.chat.id, msg.message_id)
-            #     markup = types.InlineKeyboardMarkup()
-            #     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            #     button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            #     markup.add(button1)
-            #     markup.add(button2)
-            #     markdown = f"❌ *OpenAI API запрос оказался недействительным*: `{e}`"
-            #     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            except openai.error.AuthenticationError as e:
+                print(e)
+                bot.delete_message(message.chat.id, msg.message_id)
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                markdown = f"❌ *OpenAI API запрос не был авторизован*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
-            # except openai.error.AuthenticationError as e:
-            #     print(e)
-            #     bot.delete_message(message.chat.id, msg.message_id)
-            #     markup = types.InlineKeyboardMarkup()
-            #     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            #     button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            #     markup.add(button1)
-            #     markup.add(button2)
-            #     markdown = f"❌ *OpenAI API запрос не был авторизован*: `{e}`"
-            #     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            except openai.error.PermissionError as e:
+                print(e)
+                bot.delete_message(message.chat.id, msg.message_id)
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                markdown = f"❌ *Запрос OpenAI API не был разрешен*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
-            # except openai.error.PermissionError as e:
-            #     print(e)
-            #     bot.delete_message(message.chat.id, msg.message_id)
-            #     markup = types.InlineKeyboardMarkup()
-            #     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            #     button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            #     markup.add(button1)
-            #     markup.add(button2)
-            #     markdown = f"❌ *Запрос OpenAI API не был разрешен*: `{e}`"
-            #     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
-            # except openai.error.RateLimitError as e:
-            #     print(e)
-            #     bot.delete_message(message.chat.id, msg.message_id)
-            #     markup = types.InlineKeyboardMarkup()
-            #     button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            #     button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            #     markup.add(button1)
-            #     markup.add(button2)
-            #     markdown = f"❌ *Превышены лимиты OpenAI API*: `{e}`"
-            #     bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
+            except openai.error.RateLimitError as e:
+                print(e)
+                bot.delete_message(message.chat.id, msg.message_id)
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                markdown = f"❌ *Превышены лимиты OpenAI API*: `{e}`"
+                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
                 
 
     @bot.message_handler(commands=['log'])
