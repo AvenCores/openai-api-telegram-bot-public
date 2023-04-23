@@ -65,6 +65,13 @@ def ban_user(message):
             markup.add(button1)
             markup.add(button2)
             bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+    if message.text.lower() == f"/addadmin@{botname}":
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
     if len(admin_list) > 0 and str(message.from_user.id) in admin_list:
         user_id = message.text.split()[1]
         admin_list.append(user_id)
@@ -95,6 +102,14 @@ def unban_user(message):
             bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
         user_id = message.text.split()[1]
         
+        if message.text.lower() == f"/remoceadmin@{botname}":
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+
         if user_id in admin_list:
             new_lines = [line for line in admin_list if user_id not in line]
             save_admin_users(new_lines)
@@ -149,6 +164,13 @@ def ban_user(message):
             markup.add(button1)
             markup.add(button2)
             bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+        if message.text.lower() == f"/ban@{botname}":
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
         else:
             user_id = message.text.split()[1]
             banned_users.append(user_id)
@@ -179,6 +201,14 @@ def unban_user(message):
             bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
         user_id = message.text.split()[1]
         
+        if message.text.lower() == f"/unban@{botname}":
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+
         if user_id in banned_users:
             new_lines = [line for line in banned_users if user_id not in line]
             save_banned_users(new_lines)
