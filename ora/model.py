@@ -12,7 +12,7 @@ class CompletionModel:
     model         = 'gpt-3.5-turbo'
     
     def create(
-        system_prompt: str = 'You are ChatGPT, a large language model trained by OpenAI. Answer as concisely as possible', 
+        system_prompt: str = 'You are ChatGPT, a large language model trained by OpenAI.', 
         description  : str = 'ChatGPT Openai Language Model',
         name         : str = 'gpt-3.5'):
 
@@ -33,7 +33,7 @@ class CompletionModel:
             'name'       : name,
             'description': description})
         
-        print(response.json())
+        # print(response.json())
         
         CompletionModel.id        = response.json()['id']
         CompletionModel.createdBy = response.json()['createdBy']
