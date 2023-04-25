@@ -5,6 +5,7 @@ tls-client
 curl_cffi
 requests
 pypasser
+selenium
 openai
 vk_api
 pydub
