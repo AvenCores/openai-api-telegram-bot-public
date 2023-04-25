@@ -1,5 +1,6 @@
 pyTelegramBotAPI
 websocket-client
+fake_useragent
 tls-client
 curl_cffi
 requests

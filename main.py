@@ -12,12 +12,12 @@ import random
 import openai
 import shutil
 import pydub
+import quora
 import time
-import ora
 import sys
 import os
 
-from botapiconfig import openaiapi, telegrambotapi, session_key
+from botapiconfig import openaiapi, telegrambotapi, session_key, quora_token
 
 openai.api_key = openaiapi
 bot = telebot.TeleBot(telegrambotapi)
@@ -332,7 +332,7 @@ def mainstarter():
 
             try:
                 response = openai.Image.create(
-                    prompt=message.text,
+                    prompt=message.text.split(maxsplit=1)[1],
                     n=1,
                     size="1024x1024")
 
@@ -505,9 +505,7 @@ def mainstarter():
             last_messages_chatgpt4[message.chat.id] = time.time()
 
             try:
-                model = ora.CompletionModel.create(name = 'gpt-4')
-                prompt = message.text
-                response = ora.Completion.create(model = model, prompt = prompt)
+                response = quora.Completion.create(model  = 'sage', prompt = message.text.split(maxsplit=1)[1], token  = quora_token)
                 output = response.completion.choices[0].text
 
                 username = message.from_user.first_name
@@ -556,7 +554,7 @@ def mainstarter():
                 button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
                 markup.add(button1)
                 markup.add(button2)
-                markdown = f"❌ *Ora API не смог обработать запрос*: `{e}`"
+                markdown = f"❌ *Quora API не смог обработать запрос*: `{e}`"
                 bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
     @bot.message_handler(commands=['chatgpt3'])
@@ -617,7 +615,7 @@ def mainstarter():
             try:
                 response = openai.ChatCompletion.create(
                     model="gpt-3.5-turbo",
-                    messages=[{"role": "user", "content": message.text}])
+                    messages=[{"role": "user", "content": message.text.split(maxsplit=1)[1]}])
 
                 total_tokens = response['usage']['total_tokens']
                 output = response["choices"][0]["message"]["content"]
