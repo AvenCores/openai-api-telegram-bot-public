@@ -548,7 +548,7 @@ def mainstarter():
                 button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
                 markup.add(button1)
                 markup.add(button2)
-                markdown = f"❌ *Quora API не смог обработать запрос*: `{e}`"
+                markdown = f"❌ *GPT4Free API не смог обработать запрос*: `{e}`"
                 bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
     @bot.message_handler(commands=['chatgpt3'])
