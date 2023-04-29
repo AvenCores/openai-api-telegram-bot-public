@@ -2,17 +2,18 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+from gpt4free import Provider
 from pytz import timezone
 from telebot import types
 from telebot import util
 from sys import platform
 import requests
+import gpt4free
 import telebot
 import random
 import openai
 import shutil
 import pydub
-import quora
 import time
 import sys
 import os
@@ -498,8 +499,8 @@ def mainstarter():
             last_messages_chatgpt4[message.chat.id] = time.time()
 
             try:
-                response = quora.Completion.create(model  = 'sage', prompt = message.text.split(maxsplit=1)[1], token  = quora_token)
-                output = response.completion.choices[0].text
+                response = gpt4free.Completion.create(Provider.Theb, prompt=message.text.split(maxsplit=1)[1])
+                output = response
 
                 username = message.from_user.first_name
                 inputuser = message.text.split(maxsplit=1)[1]
