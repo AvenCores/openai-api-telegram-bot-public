@@ -153,7 +153,7 @@ banned_users = load_banned_users()
 def ban_user(message):
     if str(message.from_user.id) in admin_list:
         listprint = "\n".join(admin_list)
-        bot.send_message(message.chat.id, text=f"👨 *UserID Администрации*\n\n{listprint}", parse_mode="Markdown")
+        bot.send_message(message.chat.id, text=f"👨 *UserID Администраторов*\n\n{listprint}", parse_mode="Markdown")
     else:
         markup = types.InlineKeyboardMarkup()
         button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
