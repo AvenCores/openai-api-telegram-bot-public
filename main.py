@@ -18,7 +18,7 @@ import time
 import sys
 import os
 
-from botapiconfig import openaiapi, telegrambotapi, session_key, quora_token, botname, timebot, numbers
+from botapiconfig import openaiapi, telegrambotapi, session_key, quora_token, botname, timebot, numbers, chatgpt4_test
 
 openai.api_key = openaiapi
 bot = telebot.TeleBot(telegrambotapi)
@@ -148,6 +148,21 @@ def save_banned_users(banned_users):
 
 banned_users = load_banned_users()
 
+
+@bot.message_handler(commands=['adminlist'])
+def ban_user(message):
+    if str(message.from_user.id) in admin_list:
+        listprint = "\n".join(admin_list)
+        bot.send_message(message.chat.id, text=f"👨 *UserID Администрации*\n\n{listprint}", parse_mode="Markdown")
+    else:
+        markup = types.InlineKeyboardMarkup()
+        button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+        button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+        markup.add(button1)
+        markup.add(button2)
+        bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")  
+
+
 @bot.message_handler(commands=['ban'])
 def ban_user(message):
     if str(message.from_user.id) in admin_list:
@@ -275,6 +290,8 @@ def mainstarter():
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
             bot.send_message(message.chat.id, "🛑 Данная функция заблокирована для вашего аккаунта!", reply_markup=markup, parse_mode="Markdown")
             return
         if message.text.lower() == f"/dalle2@{botname}":
@@ -445,10 +462,20 @@ def mainstarter():
 
     @bot.message_handler(commands=['chatgpt4'])
     def chatgpt4(message):
+        if chatgpt4_test == "not":
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(message.chat.id, "🛑 Данная функция отключена Администрацией!", reply_markup=markup, parse_mode="Markdown")
+            return 
         if len(banned_users) > 0 and str(message.from_user.id) in banned_users:
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
             bot.send_message(message.chat.id, "🛑 Данная функция заблокирована для вашего аккаунта!", reply_markup=markup, parse_mode="Markdown")
             return
         if message.text.lower() == f"/chatgpt4@{botname}":
@@ -557,6 +584,8 @@ def mainstarter():
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
             bot.send_message(message.chat.id, "🛑 Данная функция заблокирована для вашего аккаунта!", reply_markup=markup, parse_mode="Markdown")
             return
         if message.text.lower() == f"/chatgpt3@{botname}":
