@@ -18,7 +18,7 @@ import time
 import sys
 import os
 
-from botapiconfig import openaiapi, telegrambotapi, session_key, quora_token, botname, timebot, numbers, chatgpt4_test
+from botapiconfig import openaiapi, telegrambotapi, session_key, botname, timebot, numbers, chatgpt4_test
 
 openai.api_key = openaiapi
 bot = telebot.TeleBot(telegrambotapi)
@@ -50,85 +50,6 @@ def save_admin_users(adminsid):
 
 admin_list = load_admin_list()
 
-@bot.message_handler(commands=['addadmin'])
-def ban_user(message):
-    if message.text.lower() == "/addadmin":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
-    if message.text.lower() == f"/addadmin@{botname}":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
-    if len(admin_list) > 0 and str(message.from_user.id) in admin_list:
-        user_id = message.text.split()[1]
-        admin_list.append(user_id)
-        markup = types.InlineKeyboardMarkup()
-        button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-        button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-        markup.add(button1)
-        markup.add(button2)
-        bot.send_message(message.chat.id, f"✅ Аккаунт {user_id} был успешно добавлен в Администраторы!", reply_markup=markup, parse_mode="Markdown")
-        save_admin_users(admin_list)
-    else:
-        markup = types.InlineKeyboardMarkup()
-        button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-        button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-        markup.add(button1)
-        markup.add(button2)
-        bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")
-
-@bot.message_handler(commands=['removeadmin'])
-def unban_user(message):
-    if len(admin_list) > 0 and str(message.from_user.id) in admin_list:
-        if message.text.lower() == "/removeadmin":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
-        user_id = message.text.split()[1]
-        
-        if message.text.lower() == f"/removeadmin@{botname}":
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-                markup.add(button1)
-                markup.add(button2)
-                bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
-
-        if user_id in admin_list:
-            new_lines = [line for line in admin_list if user_id not in line]
-            save_admin_users(new_lines)
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, f"🛑 Вы успешно удалили аккаунт {user_id} из Администраторов!", reply_markup=markup, parse_mode="Markdown")
-        else:
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, f"Аккаунт {user_id} не был Администратором.", reply_markup=markup, parse_mode="Markdown")
-    else:
-        markup = types.InlineKeyboardMarkup()
-        button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-        button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-        markup.add(button1)
-        markup.add(button2)
-        bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")   
-
-
 BANNED_USERS_FILE = "banned_users.txt"
 
 def load_banned_users():
@@ -148,102 +69,202 @@ def save_banned_users(banned_users):
 
 banned_users = load_banned_users()
 
-
-@bot.message_handler(commands=['adminlist'])
-def ban_user(message):
-    if str(message.from_user.id) in admin_list:
-        listprint = "\n".join(admin_list)
-        bot.send_message(message.chat.id, text=f"👨 *UserID Администраторов*\n\n{listprint}", parse_mode="Markdown")
-    else:
-        markup = types.InlineKeyboardMarkup()
-        button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-        button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-        markup.add(button1)
-        markup.add(button2)
-        bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")  
-
-
-@bot.message_handler(commands=['ban'])
-def ban_user(message):
-    if str(message.from_user.id) in admin_list:
-        if message.text.lower() == "/ban":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
-        if message.text.lower() == f"/ban@{botname}":
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-                markup.add(button1)
-                markup.add(button2)
-                bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
-        else:
-            user_id = message.text.split()[1]
-            banned_users.append(user_id)
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, f"🛑 Аккаунт {user_id} был успешно заблокирован!", reply_markup=markup, parse_mode="Markdown")
-            save_banned_users(banned_users)
-    else:
-        markup = types.InlineKeyboardMarkup()
-        button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-        button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-        markup.add(button1)
-        markup.add(button2)
-        bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")
-
-@bot.message_handler(commands=['unban'])
-def unban_user(message):
-    if str(message.from_user.id) in admin_list:
-        if message.text.lower() == "/unban":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
-        user_id = message.text.split()[1]
-        
-        if message.text.lower() == f"/unban@{botname}":
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-                markup.add(button1)
-                markup.add(button2)
-                bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
-
-        if user_id in banned_users:
-            new_lines = [line for line in banned_users if user_id not in line]
-            save_banned_users(new_lines)
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, f"✅ Вы разблокировали аккаунт {user_id}.", reply_markup=markup, parse_mode="Markdown")
-        else:
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, f"Аккаунт {user_id} не был заблокирован.", reply_markup=markup, parse_mode="Markdown")
-    else:
-        markup = types.InlineKeyboardMarkup()
-        button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-        button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-        markup.add(button1)
-        markup.add(button2)
-        bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")   
-
-
 def mainstarter():
+    @bot.message_handler(commands=['addadmin'])
+    def ban_user(message):
+        if message.text.lower() == "/addadmin":
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+        if message.text.lower() == f"/addadmin@{botname}":
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+        if len(admin_list) > 0 and str(message.from_user.id) in admin_list:
+            user_id = message.text.split()[1]
+            admin_list.append(user_id)
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(message.chat.id, f"✅ Аккаунт {user_id} был успешно добавлен в Администраторы!", reply_markup=markup, parse_mode="Markdown")
+            save_admin_users(admin_list)
+            os.execl(sys.executable, sys.executable, *sys.argv)
+        else:
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['removeadmin'])
+    def unban_user(message):
+        if len(admin_list) > 0 and str(message.from_user.id) in admin_list:
+            if message.text.lower() == "/removeadmin":
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+            user_id = message.text.split()[1]
+            
+            if message.text.lower() == f"/removeadmin@{botname}":
+                    markup = types.InlineKeyboardMarkup()
+                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                    button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                    markup.add(button1)
+                    markup.add(button2)
+                    bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+
+            if user_id in admin_list:
+                new_lines = [line for line in admin_list if user_id not in line]
+                save_admin_users(new_lines)
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, f"🛑 Вы успешно удалили аккаунт {user_id} из Администраторов!", reply_markup=markup, parse_mode="Markdown")
+                os.execl(sys.executable, sys.executable, *sys.argv)
+            else:
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, f"Аккаунт {user_id} не был Администратором.", reply_markup=markup, parse_mode="Markdown")
+        else:
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")   
+
+    @bot.message_handler(commands=['adminlist'])
+    def ban_user(message):
+        if str(message.from_user.id) in admin_list:
+            listprint = "\n".join(admin_list)
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(message.chat.id, text=f"👨 *UserID Администраторов*\n\n{listprint}", reply_markup=markup, parse_mode="Markdown")
+        else:
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")  
+
+    @bot.message_handler(commands=['ban'])
+    def ban_user(message):
+        if str(message.from_user.id) in admin_list:
+            if message.text.lower() == "/ban":
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+            if message.text.lower() == f"/ban@{botname}":
+                    markup = types.InlineKeyboardMarkup()
+                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                    button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                    markup.add(button1)
+                    markup.add(button2)
+                    bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+            else:
+                user_id = message.text.split()[1]
+                banned_users.append(user_id)
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, f"🛑 Аккаунт {user_id} был успешно заблокирован!", reply_markup=markup, parse_mode="Markdown")
+                save_banned_users(banned_users)
+        else:
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")
+
+    @bot.message_handler(commands=['unban'])
+    def unban_user(message):
+        if str(message.from_user.id) in admin_list:
+            if message.text.lower() == "/unban":
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+            user_id = message.text.split()[1]
+            
+            if message.text.lower() == f"/unban@{botname}":
+                    markup = types.InlineKeyboardMarkup()
+                    button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                    button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                    markup.add(button1)
+                    markup.add(button2)
+                    bot.send_message(message.chat.id, text="❌ *Упс, команда оказалось пустой!*", reply_markup=markup, parse_mode="Markdown")  
+
+            if user_id in banned_users:
+                new_lines = [line for line in banned_users if user_id not in line]
+                save_banned_users(new_lines)
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, f"✅ Вы разблокировали аккаунт {user_id}.", reply_markup=markup, parse_mode="Markdown")
+            else:
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, f"Аккаунт {user_id} не был заблокирован.", reply_markup=markup, parse_mode="Markdown")
+        else:
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")   
+
+    @bot.message_handler(commands=['reboot'])
+    def handle_reboot(message):
+        if str(message.from_user.id) in admin_list:
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(message.chat.id, text=f"✅ *Бот был успешно перезапущен!*", reply_markup=markup, parse_mode="Markdown")
+            os.execl(sys.executable, sys.executable, *sys.argv)
+        else:
+            markup = types.InlineKeyboardMarkup()
+            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
+            markup.add(button1)
+            markup.add(button2)
+            bot.send_message(message.chat.id, text="❌ *Данная команда доступна только Администрации!*", reply_markup=markup, parse_mode="Markdown")
+
     @bot.message_handler(commands=['start'])
     def start_message(message):
         if message.chat.type != 'private':
@@ -840,18 +861,38 @@ def mainstarter():
         message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
         if message.chat.type == 'private':
             if len(admin_list) > 0 and str(message.from_user.id) in admin_list:
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
                 markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди чата*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администратором*: `Да`"
-                bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text=markdown, reply_markup=markup, parse_mode="Markdown")
             else:
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
                 markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди чата*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администратором*: `Нет`"
-                bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text=markdown, reply_markup=markup, parse_mode="Markdown")
         elif message.chat.type in ['group', 'supergroup']:
             if len(admin_list) > 0 and str(message.from_user.id) in admin_list:
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
                 markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди беседы*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администратором*: `Да`"
-                bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text=markdown, reply_markup=markup, parse_mode="Markdown")
             else:
+                markup = types.InlineKeyboardMarkup()
+                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
+                button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
                 markdown = f"*Ваш айди*: `{message.from_user.id}`\n*Айди беседы*: `{message.chat.id}`\n*Ваш username*: `{message.from_user.username}`\n*Дата и время на сервере*: `{message_date_string}`\n*Являетесь ли вы Администратором*: `Нет`"
-                bot.send_message(message.chat.id, text=markdown, parse_mode="Markdown")
+                markup.add(button1)
+                markup.add(button2)
+                bot.send_message(message.chat.id, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
 
     @bot.message_handler(content_types=['voice'])
