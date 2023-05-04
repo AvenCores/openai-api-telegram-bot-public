@@ -195,6 +195,7 @@ def mainstarter():
                 markup.add(button2)
                 bot.send_message(message.chat.id, f"🛑 Аккаунт {user_id} был успешно заблокирован!", reply_markup=markup, parse_mode="Markdown")
                 save_banned_users(banned_users)
+                os.execl(sys.executable, sys.executable, *sys.argv)
         else:
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
@@ -232,6 +233,7 @@ def mainstarter():
                 markup.add(button1)
                 markup.add(button2)
                 bot.send_message(message.chat.id, f"✅ Вы разблокировали аккаунт {user_id}.", reply_markup=markup, parse_mode="Markdown")
+                os.execl(sys.executable, sys.executable, *sys.argv)
             else:
                 markup = types.InlineKeyboardMarkup()
                 button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
