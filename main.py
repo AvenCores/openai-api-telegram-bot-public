@@ -18,13 +18,12 @@ import time
 import sys
 import os
 
-from botapiconfig import openaiapi, telegrambotapi, session_key, botname, timebot, numbers, chatgpt4_test
+from botapiconfig import openaiapi, telegrambotapi, session_key, botname, timebot, numbers
 
 openai.api_key = openaiapi
 bot = telebot.TeleBot(telegrambotapi)
 
 last_messages_chatgpt3 = {}
-last_messages_chatgpt4 = {}
 last_messages_dalletwo = {}
 last_whisper = {}
 
@@ -305,7 +304,7 @@ def mainstarter():
         random_number = random.choice(numbers)
         sticker = open(f"stickers/{random_number}", "rb")
         bot.send_sticker(message.chat.id, sticker)
-        markdown = """Привет друг! 👋\n\nДанный телеграм бот основан на технологии ChatGPT 3.5 и 4.0, DALLE-2 и Whisper. 💻\n\nВы можете добавить данного бота к себе в чат и так же полноценно использовать, но учтите, что ограничения бота будут действовать на всех участников беседы сразу. 🤖\n\n*Что такое ChatGPT?* ❓\nChatGPT - это модель языкового обработки, разработанная OpenAI. Она была обучена на множестве текстов и может генерировать тексты, отвечать на вопросы и выполнять другие задачи обработки языка. 💡\n\n*Что такое DALLE-2?* ❓\nDALLE-2 - это продвинутая модель глубокого обучения, созданная OpenAI, которая может генерировать изображения и текстовые описания на основе заданного текстового ввода. 💡\n\n*Что такое Whisper?* ❓\nWhisper - это модель, которая позволяет переводить голосовое сообщение в текст.\n\n*Как задать вопрос ChatGPT 4.0?* ❓\nЛегко! Просто напиши /chatgpt4 ВАШ-ЗАПРОС 😉\n\n*Как задать вопрос ChatGPT 3.5?* ❓\nЛегко! Просто напиши /chatgpt3 ВАШ-ЗАПРОС 😉\n\n*Как получить картинку от DALLE-2?* ❓\nЛегко! Просто напиши /dalle2 ВАШ-ЗАПРОС 😉\n\n*Как воспользоваться Whisper?* ❓\nЛегко! Просто отправь или перешли голосовое сообщение боту 😉"""
+        markdown = """Привет друг! 👋\n\nДанный телеграм бот основан на технологии ChatGPT 3.5, DALLE-2 и Whisper. 💻\n\nВы можете добавить данного бота к себе в чат и так же полноценно использовать, но учтите, что ограничения бота будут действовать на всех участников беседы сразу. 🤖\n\n*Что такое ChatGPT?* ❓\nChatGPT - это модель языкового обработки, разработанная OpenAI. Она была обучена на множестве текстов и может генерировать тексты, отвечать на вопросы и выполнять другие задачи обработки языка. 💡\n\n*Что такое DALLE-2?* ❓\nDALLE-2 - это продвинутая модель глубокого обучения, созданная OpenAI, которая может генерировать изображения и текстовые описания на основе заданного текстового ввода. 💡\n\n*Что такое Whisper?* ❓\nWhisper - это модель, которая позволяет переводить голосовое сообщение в текст.\n\n*Как задать вопрос ChatGPT 3.5?* ❓\nЛегко! Просто напиши /chatgpt3 ВАШ-ЗАПРОС 😉\n\n*Как получить картинку от DALLE-2?* ❓\nЛегко! Просто напиши /dalle2 ВАШ-ЗАПРОС 😉\n\n*Как воспользоваться Whisper?* ❓\nЛегко! Просто отправь или перешли голосовое сообщение боту 😉"""
         bot.send_message(message.chat.id, markdown, reply_markup=markup, parse_mode="Markdown")
 
     @bot.message_handler(commands=['dalle2'])
@@ -482,124 +481,6 @@ def mainstarter():
                 markup.add(button1)
                 markup.add(button2)
                 markdown = f"❌ *Превышены лимиты OpenAI API*: `{e}`"
-                bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-
-    @bot.message_handler(commands=['chatgpt4'])
-    def chatgpt4(message):
-        if chatgpt4_test == "not":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, "🛑 Данная функция отключена Администрацией!", reply_markup=markup, parse_mode="Markdown")
-            return 
-        if len(banned_users) > 0 and str(message.from_user.id) in banned_users:
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и ваше сообщение", callback_data="delerrorandmsguser")
-            markup.add(button1)
-            markup.add(button2)
-            bot.send_message(message.chat.id, "🛑 Данная функция заблокирована для вашего аккаунта!", reply_markup=markup, parse_mode="Markdown")
-            return
-        if message.text.lower() == f"/chatgpt4@{botname}":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            markdown = f"""🚫 *Ошибка*: Команда `/chatgpt4@{botname}` оказалась пустой, запрос не может быть выполнен.
-
-Пожалуйста, укажите текст после команды `/chatgpt4@{botname}`, чтобы ChatGPT мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 🤖"""
-            markup.add(button1)
-            markup.add(button2)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-        if message.text.lower() == "/chatgpt4":
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            markdown = """🚫 *Ошибка*: Команда `/chatgpt4` оказалась пустой, запрос не может быть выполнен.
-
-Пожалуйста, укажите текст после команды `/chatgpt4`, чтобы ChatGPT мог обработать ваш запрос. Если проблема сохраняется, обратитесь к документации или к нашей службе поддержки. 🤖"""
-            markup.add(button1)
-            markup.add(button2)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-        elif len(message.text.split(maxsplit=1)[1]) > 500:
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 500 символов.*"
-            markup.add(button1)
-            markup.add(button2)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-        elif message.chat.id in last_messages_chatgpt4 and time.time() - last_messages_chatgpt4[message.chat.id] < 30:
-            markup = types.InlineKeyboardMarkup()
-            button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-            button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            markdown = "🚫 *Слишком быстро! Пожалуйста, подождите 30 секунд перед отправкой нового сообщения.*"
-            markup.add(button1)
-            markup.add(button2)
-            bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-        else:
-
-            if message.from_user.id in last_messages_chatgpt4:
-                elapsed_time = time.time() - last_messages_chatgpt4[message.from_user.id]
-                if elapsed_time < 30:
-                    time.sleep(30 - elapsed_time)
-
-            msg = bot.reply_to(message, "🔎 Идет загрузка, подождите...")
-
-            last_messages_chatgpt4[message.chat.id] = time.time()
-
-            try:
-                response = gpt4free.Completion.create(Provider.Theb, prompt=message.text.split(maxsplit=1)[1])
-                output = response
-
-                username = message.from_user.first_name
-                inputuser = message.text.split(maxsplit=1)[1]
-                bot.delete_message(message.chat.id, msg.message_id)
-                bot.reply_to(message, text="✅ Ответ получен!")
-
-                if 'output' in locals():
-                    splitted_text = util.smart_split(output, chars_per_string=2000)
-                    for text in splitted_text:
-                        bot.send_message(message.chat.id, text=f"👨 Запрос отправлен пользователем: {username}\n\n🎈 Айди сообщения: {message.message_id}\n\n💰 Затрачено токенов: FREE\n\n🤔 Запрос: {inputuser}\n\n👾 Ответ от ChatGPT4: {text}")
-                            
-                message_date = datetime.fromtimestamp(message.date, timezone(timebot))
-                message_date_string = message_date.strftime('%Y-%m-%d %H:%M:%S')
-
-                f = open("chatlog.txt", "a")
-                f.writelines('---------------------------------------------------------------------------')
-                f.writelines('\n')
-                f.writelines('Model: ChatGPT4')
-                f.writelines('\n')
-                f.writelines(f'Tokens used: FREE')
-                f.writelines('\n')
-                f.writelines(f'ChatID: {message.chat.id}')
-                f.writelines('\n')
-                f.writelines(f'MessageID: {message.message_id}')
-                f.writelines('\n')
-                f.writelines(f'UserID: {message.from_user.id}')
-                f.writelines('\n')
-                f.writelines(f'Username: {message.from_user.username}')
-                f.writelines('\n')
-                f.writelines(f'Date and Time: {message_date_string}')
-                f.writelines('\n')
-                f.writelines(f'Prompt: {message.text.split(maxsplit=1)[1]}')
-                f.writelines('\n')
-                f.writelines(f'AI reply: {output}')
-                f.writelines('\n')
-                f.writelines('---------------------------------------------------------------------------')
-                f.writelines('\n\n')
-                f.close
-            
-            except Exception as e:
-                print(e)
-                bot.delete_message(message.chat.id, msg.message_id)
-                markup = types.InlineKeyboardMarkup()
-                button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
-                button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-                markup.add(button1)
-                markup.add(button2)
-                markdown = f"❌ *GPT4Free API не смог обработать запрос*: `{e}`"
                 bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
 
     @bot.message_handler(commands=['chatgpt3'])
