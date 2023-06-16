@@ -337,11 +337,11 @@ def mainstarter():
             markup.add(button1)
             markup.add(button2)
             bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-        elif len(message.text.split(maxsplit=1)[1]) > 500:
+        elif len(message.text.split(maxsplit=1)[1]) > 300:
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 500 символов.*"
+            markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 300 символов.*"
             markup.add(button1)
             markup.add(button2)
             bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
@@ -513,11 +513,11 @@ def mainstarter():
             markup.add(button1)
             markup.add(button2)
             bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
-        elif len(message.text.split(maxsplit=1)[1]) > 500:
+        elif len(message.text.split(maxsplit=1)[1]) > 300:
             markup = types.InlineKeyboardMarkup()
             button1 = types.InlineKeyboardButton("Cкрыть уведомление", callback_data="dellthiserror")
             button2 = types.InlineKeyboardButton("Скрыть уведомление и запрос", callback_data="delerrorandmsguser")
-            markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 500 символов.*"
+            markdown = "🚫 *Сообщение слишком длинное! Максимальная длина сообщения - 300 символов.*"
             markup.add(button1)
             markup.add(button2)
             bot.reply_to(message, text=markdown, reply_markup=markup, parse_mode="Markdown")
@@ -542,7 +542,7 @@ def mainstarter():
 
             try:
                 response = openai.ChatCompletion.create(
-                    model="gpt-3.5-turbo",
+                    model="gpt-3.5-turbo-16k",
                     messages=[{"role": "user", "content": message.text.split(maxsplit=1)[1]}])
 
                 total_tokens = response['usage']['total_tokens']
