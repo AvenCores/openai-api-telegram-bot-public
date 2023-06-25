@@ -1,9 +1,9 @@
-from sys import platform
+from sys import platform, executable, argv
 import subprocess
 
 
 if platform == "win32":
-    subprocess.run(["python", "main.py", "%*"], shell=True)
+    subprocess.run([executable, "main.py"] + argv[1:])
 
-if platform == "linux" or platform == "linux2" or platform == "unix":
-    subprocess.run(["python3", "main.py"], shell=True)
+if platform.startswith("linux"):
+    subprocess.run([executable, "main.py"] + argv[1:])
