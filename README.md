@@ -16,7 +16,7 @@
 + `reboot`: **Перезапустить бота** 
 
 # 🧬 Установка
-+ `Fedora`: **sudo dnf install ffmpeg** 
++ `Fedora`: **sudo dnf install git ffmpeg** 
 + `Arch`: **sudo pacman -S git python-virtualenv ffmpeg** 
 + `Ubuntu/Debian`: **sudo apt install git python3.10-venv ffmpeg**
 - **`git clone https://github.com/AvenCores/openai-api-telegram-bot-public`**
